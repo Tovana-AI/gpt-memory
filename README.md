@@ -14,8 +14,12 @@ This is a Python library that provides a memory management system for AI agents.
 - Provides a simple API to get and update user memory
 - Generates a formatted memory context that can be used as input to language models
 
+## Architecture
+<img width="949" alt="Screenshot 2024-08-20 at 22 23 02" src="https://github.com/user-attachments/assets/db867080-613e-4db6-8ba8-7bde524c65e9">
+
+
 ## Installation
-You can install the AI Memory Infrastructure library using pip:
+You can install the GPT Memory library using pip:
 
 ```bash
 pip install gpt-memory

@@ -28,7 +28,7 @@ Here's an example of how to use the library:
 from ai_memory import AIMemoryManager
 
 # Initialize the memory manager with your OpenAI API key
-memory_manager = AIMemoryManager(api_key="your-api-key-here")
+memory_manager = AIMemoryManager(api_key="your-api-key-here", generate_beliefs=True, business_description="an AI therapist")
 
 # Update user memory
 memory_manager.update_user_memory("user123", "I just moved from New York to Paris for work.")
@@ -51,6 +51,35 @@ The library provides the following main classes and methods:
 `update_memory(user_id: str, message: str) -> JSON`: Updates the memory for the given user with the information extracted from the message. Returns an updated memory JSON.
 
 `get_memory_context(user_id: str) -> str`: Generates a formatted memory context for the given user.
+
+`get_beliefs(user_id: str) -> str`: Gets actionable beliefs based on the user's memory and business description.
+
+## Belief Generation
+Introducing beliefs - a new approach for improving LLM reasoning by providing actionable insights learned over time from memory.
+
+The belief method generates actionable beliefs based on the user's memory and the business description. The beliefs are generated as a string that can be used as input to LLMs to generate personalized responses.
+
+### Examples
+#### Input:
+- business_description: "a commerce site"
+- memories: {'pets': ['dog named charlie', 'horse named luna']}
+- belief_context: None
+#### Output:
+
+```json
+{"beliefs": ",- suggest pet products for dogs and horses"}
+```
+
+#### Input:
+
+- business_description: "an AI therapist"
+- memories: {'pets': ['dog named charlie', 'horse named luna', 'sleep_time: 10pm']}
+- belief_context: "Suggest mediation at 9:30"
+#### Output:
+
+```json
+{"beliefs": ",- Suggest mediation at 9:30\n- Suggest spending time with Charlie and Luna when user is sad"}
+```
 
 ## Contributing
 Contributions to GPT Memory are welcome! If you find any issues or have suggestions for improvements, please feel free to submit a pull request or open an issue on the GitHub repository.

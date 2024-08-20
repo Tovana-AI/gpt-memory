@@ -15,7 +15,8 @@ This is a Python library that provides a memory management system for AI agents.
 - Generates a formatted memory context that can be used as input to language models
 
 ## Architecture
-<img width="949" alt="Screenshot 2024-08-20 at 22 23 02" src="https://github.com/user-attachments/assets/db867080-613e-4db6-8ba8-7bde524c65e9">
+<img width="632" alt="Screenshot 2024-08-20 at 22 24 29" src="https://github.com/user-attachments/assets/b3c8d15b-4cb3-4367-9a6f-082b97537e04">
+
 
 
 ## Installation

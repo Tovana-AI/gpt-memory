@@ -6,10 +6,13 @@ from datetime import datetime
 
 
 class GPTMemory:
-    def __init__(self, api_key: str, memory_file: str = "memory.json"):
+    def __init__(self, api_key: str, business_description: str,
+                 generate_beliefs: bool = False, memory_file: str = "memory.json"):
         self.api_key = api_key
         openai.api_key = self.api_key
         self.memory_file = memory_file
+        self.business_description = business_description
+        self.generate_beliefs = generate_beliefs
         self.memory = self.load_memory()
 
     def load_memory(self) -> Dict[str, Dict]:
@@ -27,7 +30,12 @@ class GPTMemory:
             return json.dumps(self.memory[user_id], indent=2)
         return None
 
-    def update_memory(self, user_id: str, message: str):
+    def get_beliefs(self, user_id: str) -> Optional[str]:
+        if user_id in self.memory:
+            return self.memory[user_id].get("beliefs")
+        return None
+
+    def update_memory(self, user_id: str, message: str) -> Dict:
         if user_id not in self.memory:
             self.memory[user_id] = {}
 
@@ -53,6 +61,12 @@ class GPTMemory:
 
         # Add timestamp for the last update
         self.memory[user_id]['last_updated'] = datetime.now().isoformat()
+
+        if self.generate_beliefs:
+            # Generate new beliefs based on the updated memory
+            new_beliefs = self.generate_new_beliefs(user_id)
+            if new_beliefs:
+                self.memory[user_id]['beliefs'] = new_beliefs
 
         self.save_memory()
         return self.memory[user_id]
@@ -81,7 +95,6 @@ class GPTMemory:
         return relevant_key if relevant_key != "None" else None
 
     def resolve_conflict(self, key: str, old_value: str, new_value: str) -> str:
-        #print(f"Resolve conflict for key: {key}, old value: {old_value}, new value: {new_value}")
         prompt = f"""
         Resolve the conflict between the old and new values for the following key in the user's memory:
 
@@ -133,6 +146,44 @@ class GPTMemory:
         extracted_info = json.loads(response.choices[0].message.content)
         return extracted_info
 
+    def generate_new_beliefs(self, user_id: str):
+        examples = """
+        Input - business_description: a commerce site, memories: {pets: ['dog named charlie', 'horse named luna'], beliefs: None
+        Output (JSON) - {"beliefs": "- suggest pet products for dogs and horses"}
+
+        Input - business_description: an AI therapist, memories: {pets: ['dog named charlie', 'horse named luna', sleep_time: '10pm'], beliefs: 'Suggest mediation at 9:30pm'}
+        Output (JSON) - {"beliefs": "- Suggest mediation at 9:30\\n- Suggest spending time with Charlie and Luna when user is sad"}
+        
+        Input - business_description: an AI personal assistant, memories: {pets: ['dog named charlie', 'horse named luna', sleep_time: '10pm'], beliefs: None}
+        Output (JSON) - {"beliefs": "- Don't schedule meetings after 9pm"}
+        """
+
+        prompt = f"""
+        Given a business description, memories, and existing belief context, generate new actionable beliefs if necessary. 
+        If no new beliefs are found, return 'None'.
+
+        {examples}
+        
+        Do not use any specific format (like ```json), just provide the extracted information as a JSON.
+
+        Input - business_description: {self.business_description}, memories: {self.get_memory(user_id)}, beliefs: {self.memory.get("beliefs")}
+        Output (JSON) - 
+        """
+
+        response = openai.chat.completions.create(
+            model="gpt-4o",
+            messages=[
+                {"role": "system",
+                 "content": "You are an AI assistant that extracts relevant actionable "
+                            "insights based on memory about the user and their business description."},
+                {"role": "user", "content": prompt}
+            ],
+            temperature=0
+        )
+
+        beliefs = response.choices[0].message.content.strip()
+        return beliefs if beliefs != "None" else None
+
     def get_memory_context(self, user_id: str) -> str:
         if user_id in self.memory:
             context = "User Memory:\n"
@@ -144,14 +195,20 @@ class GPTMemory:
 
 
 class GPTMemoryManager:
-    def __init__(self, api_key: str):
-        self.memory = GPTMemory(api_key)
+    def __init__(self, api_key: str, business_description: str = "A personal AI assistant",
+                 generate_beliefs: bool = True):
+        self.memory = GPTMemory(api_key=api_key,
+                                business_description=business_description,
+                                generate_beliefs=generate_beliefs)
 
     def get_memory(self, user_id: str) -> str:
         return self.memory.get_memory(user_id) or "No memory found for this user."
 
     def update_memory(self, user_id: str, message: str):
         self.memory.update_memory(user_id, message)
+
+    def get_beliefs(self, user_id: str) -> str:
+        return self.memory.get_beliefs(user_id) or None
 
     def get_memory_context(self, user_id: str) -> str:
         return self.memory.get_memory_context(user_id)

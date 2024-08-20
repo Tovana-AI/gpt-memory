@@ -46,9 +46,9 @@ print(context) >> 'User Memory:\n location: Paris,\n previous_location: New York
 The library provides the following main classes and methods:
 
 ### GPTMemoryManager
-`get_user_memory(user_id: str) -> JSON`: Retrieves the memory for the given user.
+`get_memory(user_id: str) -> JSON`: Retrieves the memory for the given user.
 
-`update_user_memory(user_id: str, message: str) -> JSON`: Updates the memory for the given user with the information extracted from the message. Returns an updated memory JSON.
+`update_memory(user_id: str, message: str) -> JSON`: Updates the memory for the given user with the information extracted from the message. Returns an updated memory JSON.
 
 `get_memory_context(user_id: str) -> str`: Generates a formatted memory context for the given user.
 

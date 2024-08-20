@@ -35,11 +35,15 @@ memory_manager.update_user_memory("user123", "I just moved from New York to Pari
 
 # Get user memory
 user_memory = memory_manager.get_user_memory("user123")
-print(user_memory) >> {'location': 'Paris', 'previous_location': 'New York'}
+print(user_memory) -> {'location': 'Paris', 'previous_location': 'New York'}
 
 # Get memory context for LLM
 context = memory_manager.get_memory_context("user123")
-print(context) >> 'User Memory:\n location: Paris,\n previous_location: New York'
+print(context) -> 'User Memory:\n location: Paris,\n previous_location: New York'
+
+# Get beliefs
+beliefs = memory_manager.get_beliefs("user123")
+print(beliefs) -> {"beliefs": "- Suggest spending time with Charlie and Luna when user is feeling down\n- Suggest family activities with Lisa and Mai for emotional well-being\n- Recommend playing basketball for physical exercise and stress relief"}
 ```
 
 ## API Reference

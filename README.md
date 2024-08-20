@@ -61,13 +61,12 @@ The library provides the following main classes and methods:
 ## Belief Generation
 Introducing beliefs - a new approach for improving LLM reasoning by providing actionable insights learned over time from memory.
 
-The belief method generates actionable beliefs based on the user's memory and the business description. The beliefs are generated as a string that can be used as input to LLMs to generate personalized responses.
+The belief method generates actionable beliefs based on the user's memory and the business description. The beliefs are generated as a string that can be used as context to LLMs to generate personalized responses.
 
 ### Examples
 #### Input:
-- business_description: "a commerce site"
-- memories: {'pets': ['dog named charlie', 'horse named luna']}
-- belief_context: None
+- `business_description`: "a commerce site"
+- `memory`: {'pets': ['dog named charlie', 'horse named luna']}
 #### Output:
 
 ```json
@@ -76,9 +75,8 @@ The belief method generates actionable beliefs based on the user's memory and th
 
 #### Input:
 
-- business_description: "an AI therapist"
-- memories: {'pets': ['dog named charlie', 'horse named luna', 'sleep_time: 10pm']}
-- belief_context: "Suggest mediation at 9:30"
+- `business_description`: "an AI therapist"
+- `memory`: {'pets': ['dog named charlie', 'horse named luna', 'sleep_time: 10pm']}
 #### Output:
 
 ```json

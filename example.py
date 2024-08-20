@@ -2,7 +2,9 @@ from memory import GPTMemoryManager
 import os
 
 # Initialize the memory manager with your OpenAI API key
-memory_manager = GPTMemoryManager(api_key=os.environ["OPENAI_API_KEY"])
+memory_manager = GPTMemoryManager(api_key=os.environ["OPENAI_API_KEY"],
+                                  business_description="A personal therapist",
+                                  generate_beliefs=True)
 
 # Update user memory
 memory_manager.update_memory("user123", "We also have a pet dog named Charlie")
@@ -20,3 +22,6 @@ print(user_memory)
 # Get memory context for LLM
 context = memory_manager.get_memory_context("user123")
 print(context)
+
+beliefs = memory_manager.get_beliefs("user123")
+print(beliefs)

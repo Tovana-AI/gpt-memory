@@ -6,8 +6,13 @@ from datetime import datetime
 
 
 class GPTMemory:
-    def __init__(self, api_key: str, business_description: str,
-                 include_beliefs: bool = False, memory_file: str = "memory.json"):
+    def __init__(
+        self,
+        api_key: str,
+        business_description: str,
+        include_beliefs: bool = False,
+        memory_file: str = "memory.json",
+    ):
         self.api_key = api_key
         openai.api_key = self.api_key
         self.memory_file = memory_file
@@ -17,12 +22,12 @@ class GPTMemory:
 
     def load_memory(self) -> Dict[str, Dict]:
         if os.path.exists(self.memory_file):
-            with open(self.memory_file, 'r') as f:
+            with open(self.memory_file, "r") as f:
                 return json.load(f)
         return {}
 
     def save_memory(self):
-        with open(self.memory_file, 'w') as f:
+        with open(self.memory_file, "w") as f:
             json.dump(self.memory, f, indent=2)
 
     def get_memory(self, user_id: str) -> Optional[str]:
@@ -52,21 +57,19 @@ class GPTMemory:
                 else:
                     # Resolve conflict and update the value
                     self.memory[user_id][existing_key] = self.resolve_conflict(
-                        existing_key,
-                        self.memory[user_id].get(existing_key),
-                        value
+                        existing_key, self.memory[user_id].get(existing_key), value
                     )
             else:
                 self.memory[user_id][key] = value
 
         # Add timestamp for the last update
-        self.memory[user_id]['last_updated'] = datetime.now().isoformat()
+        self.memory[user_id]["last_updated"] = datetime.now().isoformat()
 
         if self.include_beliefs:
             # Generate new beliefs based on the updated memory
             new_beliefs = self.generate_new_beliefs(user_id)
             if new_beliefs:
-                self.memory[user_id]['beliefs'] = new_beliefs
+                self.memory[user_id]["beliefs"] = new_beliefs
 
         self.save_memory()
         return self.memory[user_id]
@@ -85,10 +88,13 @@ class GPTMemory:
         response = openai.chat.completions.create(
             model="gpt-4o-mini",
             messages=[
-                {"role": "system", "content": "You are an AI assistant that finds relevant keys in user memory."},
-                {"role": "user", "content": prompt}
+                {
+                    "role": "system",
+                    "content": "You are an AI assistant that finds relevant keys in user memory.",
+                },
+                {"role": "user", "content": prompt},
             ],
-            temperature=0
+            temperature=0,
         )
 
         relevant_key = response.choices[0].message.content.strip()
@@ -110,11 +116,13 @@ class GPTMemory:
         response = openai.chat.completions.create(
             model="gpt-4o",
             messages=[
-                {"role": "system",
-                 "content": "You are an AI assistant that resolves conflicts in user memory updates."},
-                {"role": "user", "content": prompt}
+                {
+                    "role": "system",
+                    "content": "You are an AI assistant that resolves conflicts in user memory updates.",
+                },
+                {"role": "user", "content": prompt},
             ],
-            temperature=0
+            temperature=0,
         )
 
         resolved_value = response.choices[0].message.content.strip()
@@ -136,11 +144,13 @@ class GPTMemory:
         response = openai.chat.completions.create(
             model="gpt-4o",
             messages=[
-                {"role": "system",
-                 "content": "You are an AI assistant that extracts relevant personal information from messages."},
-                {"role": "user", "content": prompt}
+                {
+                    "role": "system",
+                    "content": "You are an AI assistant that extracts relevant personal information from messages.",
+                },
+                {"role": "user", "content": prompt},
             ],
-            temperature=0
+            temperature=0,
         )
 
         extracted_info = json.loads(response.choices[0].message.content)
@@ -173,12 +183,14 @@ class GPTMemory:
         response = openai.chat.completions.create(
             model="gpt-4o",
             messages=[
-                {"role": "system",
-                 "content": "You are an AI assistant that extracts relevant actionable "
-                            "insights based on memory about the user and their business description."},
-                {"role": "user", "content": prompt}
+                {
+                    "role": "system",
+                    "content": "You are an AI assistant that extracts relevant actionable "
+                    "insights based on memory about the user and their business description.",
+                },
+                {"role": "user", "content": prompt},
             ],
-            temperature=0
+            temperature=0,
         )
 
         beliefs = response.choices[0].message.content.strip()
@@ -188,18 +200,24 @@ class GPTMemory:
         if user_id in self.memory:
             context = "User Memory:\n"
             for key, value in self.memory[user_id].items():
-                if key != 'last_updated':
+                if key != "last_updated":
                     context += f"{key}: {value}\n"
             return context
         return "No memory found for this user."
 
 
 class GPTMemoryManager:
-    def __init__(self, api_key: str, business_description: str = "A personal AI assistant",
-                 include_beliefs: bool = True):
-        self.memory = GPTMemory(api_key=api_key,
-                                business_description=business_description,
-                                include_beliefs=include_beliefs)
+    def __init__(
+        self,
+        api_key: str,
+        business_description: str = "A personal AI assistant",
+        include_beliefs: bool = True,
+    ):
+        self.memory = GPTMemory(
+            api_key=api_key,
+            business_description=business_description,
+            include_beliefs=include_beliefs,
+        )
 
     def get_memory(self, user_id: str) -> str:
         return self.memory.get_memory(user_id) or "No memory found for this user."

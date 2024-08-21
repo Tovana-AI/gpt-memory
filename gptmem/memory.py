@@ -4,6 +4,11 @@ from typing import Dict, List, Optional
 import openai
 from datetime import datetime
 
+from langchain_core.output_parsers import JsonOutputParser
+from langchain_core.prompts import ChatPromptTemplate
+
+from gptmem.llms.llms import llm
+
 
 class GPTMemory:
     def __init__(
@@ -129,31 +134,29 @@ class GPTMemory:
         return resolved_value
 
     def extract_information(self, message: str) -> Dict[str, str]:
-        prompt = f"""
-        Extract relevant personal information from the following message. 
-        Focus on key details such as location, preferences, important events, or any other significant personal information.
-        Ignore irrelevant or redundant information. Try to keep all relevant information under the same key. Less is more.
+        system_prompt = """
+          You are an AI assistant that extracts relevant personal information from messages
+          Extract relevant personal information from the following message. 
+          Focus on key details such as location, preferences, important events, or any other significant personal information.
+          Ignore irrelevant or redundant information. Try to keep all relevant information under the same key. Less is more.
 
-        Message: {message}
+          Return the extracted information as a JSON object with appropriate keys (lower case) and values.
+          Do not use any specific format (like ```json), just provide the extracted information as a JSON.
+          Remembers that the memory could be very long so try to keep values concise and short with no explanations.
+          """
 
-        Return the extracted information as a JSON object with appropriate keys (lower case) and values.
-        Do not use any specific format (like ```json), just provide the extracted information as a JSON.
-        Remembers that the memory could be very long so try to keep values concise and short with no explanations.
-        """
-
-        response = openai.chat.completions.create(
-            model="gpt-4o",
-            messages=[
-                {
-                    "role": "system",
-                    "content": "You are an AI assistant that extracts relevant personal information from messages.",
-                },
-                {"role": "user", "content": prompt},
-            ],
-            temperature=0,
+        prompt = ChatPromptTemplate.from_messages(
+            [
+                (
+                    "system",
+                    system_prompt,
+                ),
+                ("human", "Message: {user_message}"),
+            ]
         )
+        chain = prompt | llm | JsonOutputParser()
+        extracted_info = chain.invoke({"user_message": message})
 
-        extracted_info = json.loads(response.choices[0].message.content)
         return extracted_info
 
     def generate_new_beliefs(self, user_id: str):

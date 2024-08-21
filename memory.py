@@ -7,12 +7,12 @@ from datetime import datetime
 
 class GPTMemory:
     def __init__(self, api_key: str, business_description: str,
-                 generate_beliefs: bool = False, memory_file: str = "memory.json"):
+                 include_beliefs: bool = False, memory_file: str = "memory.json"):
         self.api_key = api_key
         openai.api_key = self.api_key
         self.memory_file = memory_file
         self.business_description = business_description
-        self.generate_beliefs = generate_beliefs
+        self.include_beliefs = include_beliefs
         self.memory = self.load_memory()
 
     def load_memory(self) -> Dict[str, Dict]:
@@ -62,7 +62,7 @@ class GPTMemory:
         # Add timestamp for the last update
         self.memory[user_id]['last_updated'] = datetime.now().isoformat()
 
-        if self.generate_beliefs:
+        if self.include_beliefs:
             # Generate new beliefs based on the updated memory
             new_beliefs = self.generate_new_beliefs(user_id)
             if new_beliefs:
@@ -196,10 +196,10 @@ class GPTMemory:
 
 class GPTMemoryManager:
     def __init__(self, api_key: str, business_description: str = "A personal AI assistant",
-                 generate_beliefs: bool = True):
+                 include_beliefs: bool = True):
         self.memory = GPTMemory(api_key=api_key,
                                 business_description=business_description,
-                                generate_beliefs=generate_beliefs)
+                                include_beliefs=include_beliefs)
 
     def get_memory(self, user_id: str) -> str:
         return self.memory.get_memory(user_id) or "No memory found for this user."

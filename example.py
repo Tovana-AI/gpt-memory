@@ -4,7 +4,7 @@ import os
 # Initialize the memory manager with your OpenAI API key
 memory_manager = GPTMemoryManager(api_key=os.environ["OPENAI_API_KEY"],
                                   business_description="A personal therapist",
-                                  generate_beliefs=True)
+                                  include_beliefs=True)
 
 # Update user memory
 memory_manager.update_memory("user123", "We also have a pet dog named Charlie")

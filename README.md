@@ -38,10 +38,10 @@ pip install gpt-memory
 
 2. Use it in your project:
 ```python
-from ai_memory import AIMemoryManager
+from gpt_memory import GPTMemoryManager
 
 # Initialize with your OpenAI API key
-memory_manager = AIMemoryManager(api_key="your-api-key-here", generate_beliefs=True, business_description="an AI therapist")
+memory_manager = GPTMemoryManager(api_key="your-api-key-here", generate_beliefs=True, business_description="an AI therapist")
 
 # Update user memory
 memory_manager.update_user_memory("user123", "I just moved from New York to Paris for work.")

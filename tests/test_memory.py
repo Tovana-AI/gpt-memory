@@ -46,7 +46,7 @@ def test_remember_location() -> None:
     assert user_memory_dict["location"] == "New York City"
 
 
-@pytest.mark.xfail(reason='different keys')
+@pytest.mark.xfail(reason="different keys")
 def test_relationship_detection() -> None:
     test_user_id = str(uuid.uuid4())
     memory_manager.update_memory(test_user_id, "We also have a pet dog named Charlie")
@@ -68,7 +68,10 @@ def test_important_event() -> None:
     test_user_id = str(uuid.uuid4())
 
     memory_manager.update_memory(test_user_id, "We're expecting a baby in 3 months")
+    user_memory = memory_manager.get_memory(test_user_id)
+
     memory_manager.update_memory(test_user_id, "Our baby was just born!")
+    user_memory_dict = json.loads(user_memory)
 
     user_memory = memory_manager.get_memory(test_user_id)
     user_memory_dict = json.loads(user_memory)

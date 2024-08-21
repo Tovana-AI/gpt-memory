@@ -2,15 +2,19 @@ from memory import GPTMemoryManager
 import os
 
 # Initialize the memory manager with your OpenAI API key
-memory_manager = GPTMemoryManager(api_key=os.environ["OPENAI_API_KEY"],
-                                  business_description="A personal therapist",
-                                  generate_beliefs=True)
+memory_manager = GPTMemoryManager(
+    api_key=os.environ["OPENAI_API_KEY"],
+    business_description="A personal therapist",
+    generate_beliefs=True,
+)
 
 # Update user memory
 memory_manager.update_memory("user123", "We also have a pet dog named Charlie")
 memory_manager.update_memory("user123", "We also have a pet horse named Luna")
 memory_manager.update_memory("user123", "We live in New York City")
-memory_manager.update_memory("user123", "I have young girl named Lisa and married to my wife Mai")
+memory_manager.update_memory(
+    "user123", "I have young girl named Lisa and married to my wife Mai"
+)
 memory_manager.update_memory("user123", "I love playing basketball and trading cards")
 memory_manager.update_memory("user123", "We're expecting a baby in 3 months")
 memory_manager.update_memory("user123", "Our baby was just born!")

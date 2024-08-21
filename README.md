@@ -4,8 +4,8 @@
 
 GPT Memory is a Python library that introduces a new approach to improving LLM reasoning through actionable insights (beliefs) learned over time from memory. Supercharge your AI agents with personalized, context-aware responses.
 
-[![PyPI version](https://badge.fury.io/py/gpt-memory.svg)](https://badge.fury.io/py/gpt-memory)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![PyPI version](https://badge.fury.io/py/gpt-memory.svg)](https://badge.fury.io/py/gptmem)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/license/apache-2-0)
 
 ## Why GPT Memory?
 Current AI memory systems face significant drawbacks that limit their ability to mimic human-like intelligence. These include their static nature (vector dbs / semantic search), lack of contextual understanding, inability to learn from experience or form beliefs, poor handling of contradictions, limited associative capabilities, and absence of emotional intelligence. Additionally, AI agents struggle with abstraction, lack meta-cognitive abilities, and don't have mechanisms for selectively retaining or forgetting information. These shortcomings collectively restrict AI agents' adaptability, decision-making, and ability to navigate complex, real-world scenarios effectively.
@@ -17,11 +17,11 @@ The system is a comprehensive memory and belief management framework for AI agen
 ## 🌟 Features
 
 - Memory Management
-  - `update_user_memory()`: Extract and store relevant information from user messages
-  - `get_user_memory()`: Retrieve stored memory for a specific user
-  - `get_memory_context()`: Generate formatted memory context for LLM input
+  - Extract and store relevant information from user messages
+  - Retrieve stored memory for a specific user
+  - Generate formatted memory context for LLM input
 - Belief Generation
-  - `get_beliefs()`: Create actionable insights based on user memory and business context
+  - Create actionable insights based on user memory and business context
   - Beliefs are AI-generated suggestions that help guide LLM responses, improving personalization and relevance
 - Smart Data Handling
   - Automatic deduplication of information
@@ -41,12 +41,12 @@ The system is a comprehensive memory and belief management framework for AI agen
 
 1. Install GPT Memory:
 ```bash
-pip install gpt-memory
+pip install gptmem
 ```
 
 2. Use it in your project:
 ```python
-from gpt_memory import GPTMemoryManager
+from gptmem import GPTMemoryManager
 
 business_description = "an AI therapist"
 # Initialize with your OpenAI API key

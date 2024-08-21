@@ -1,4 +1,4 @@
-from memory import GPTMemoryManager
+from gptmem import GPTMemoryManager
 import os
 
 # Initialize the memory manager with your OpenAI API key

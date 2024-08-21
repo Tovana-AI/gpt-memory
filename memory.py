@@ -8,6 +8,7 @@ from langchain_core.output_parsers import JsonOutputParser, StrOutputParser
 from langchain_core.prompts import (
     ChatPromptTemplate,
     PromptTemplate,
+    FewShotPromptTemplate,
 )
 
 from llms.llms import llm
@@ -170,44 +171,53 @@ class GPTMemory:
         return extracted_info
 
     def generate_new_beliefs(self, user_id: str):
-        examples = """
-        Input - business_description: a commerce site, memories: {pets: ['dog named charlie', 'horse named luna'], beliefs: None
-        Output (JSON) - {"beliefs": "- suggest pet products for dogs and horses"}
-
-        Input - business_description: an AI therapist, memories: {pets: ['dog named charlie', 'horse named luna', sleep_time: '10pm'], beliefs: 'Suggest mediation at 9:30pm'}
-        Output (JSON) - {"beliefs": "- Suggest mediation at 9:30\\n- Suggest spending time with Charlie and Luna when user is sad"}
-        
-        Input - business_description: an AI personal assistant, memories: {pets: ['dog named charlie', 'horse named luna', sleep_time: '10pm'], beliefs: None}
-        Output (JSON) - {"beliefs": "- Don't schedule meetings after 9pm"}
-        """
-
-        prompt = f"""
-        Given a business description, memories, and existing belief context, generate new actionable beliefs if necessary. 
-        If no new beliefs are found, return 'None'.
-
-        {examples}
-        
-        Do not use any specific format (like ```json), just provide the extracted information as a JSON.
-
-        Input - business_description: {self.business_description}, memories: {self.get_memory(user_id)}, beliefs: {self.memory.get("beliefs")}
-        Output (JSON) - 
-        """
-
-
-        response = openai.chat.completions.create(
-            model="gpt-4o",
-            messages=[
-                {
-                    "role": "system",
-                    "content": "You are an AI assistant that extracts relevant actionable "
-                    "insights based on memory about the user and their business description.",
-                },
-                {"role": "user", "content": prompt},
-            ],
-            temperature=0,
+        example_prompt = PromptTemplate.from_template(
+            """
+                <example>
+                    <input> {{input}} </input>
+                    <output> {{output}} </output>
+                </example>
+            """,
+            template_format="mustache",
         )
 
-        beliefs = response.choices[0].message.content.strip()
+        examples = [
+            {
+                "input": "business_description: a commerce site, memories: {{pets: ['dog named charlie', 'horse named luna'], beliefs: None}}",
+                "output": """{{"beliefs": "- suggest pet products for dogs and horses"}}""",
+            },
+            {
+                "input": "business_description: an AI therapist, memories: {{pets: ['dog named charlie', 'horse named luna', sleep_time: '10pm'], beliefs: 'Suggest mediation at 9:30pm'}}",
+                "output": """{{"beliefs": "- Suggest mediation at 9:30\\n- Suggest spending time with Charlie and Luna when user is sad"}}""",
+            },
+            {
+                "input": "business_description: an AI personal assistant, memories: {{pets: ['dog named charlie', 'horse named luna', sleep_time: '10pm'], beliefs: None}}",
+                "output": """{{"beliefs": "- Don't schedule meetings after 9pm"}}""",
+            },
+        ]
+
+        few_shot_prompt = FewShotPromptTemplate(
+            examples=examples,
+            example_prompt=example_prompt,
+            prefix="""
+            You are an AI assistant that extracts relevant actionable insights based on memory about the user and their business description
+            Given a business description, memories, and existing belief context, generate new actionable beliefs if necessary. 
+                                                        If no new beliefs are found, return 'None'""",
+            suffix="""
+            Do not use any specific format (like ```json), just provide the extracted information as a JSON.
+            <input>business_description: {business_description}, memories: {memories}, beliefs: {beliefs} </input>
+            """,
+            input_variables=["business_description", "memories", "beliefs"],
+        )
+
+        chain = few_shot_prompt | llm | StrOutputParser()
+        beliefs = chain.invoke(
+            {
+                "business_description": self.business_description,
+                "memories": self.get_memory(user_id),
+                "beliefs": self.memory.get("beliefs"),
+            }
+        )
         return beliefs if beliefs != "None" else None
 
     def get_memory_context(self, user_id: str) -> str:

@@ -8,7 +8,7 @@ user_id = str(uuid.uuid4())
 # Initialize the memory manager with your OpenAI API key
 memory_manager = GPTMemoryManager(
     api_key=os.environ["OPENAI_API_KEY"],
-    provider="anthropic",
+    provider="openai",
     temperature=0,
     business_description="A personal therapist",
     include_beliefs=True,
@@ -27,11 +27,19 @@ memory_manager.update_memory(user_id, "Our baby was just born!")
 
 # Get user memory
 user_memory = memory_manager.get_memory(user_id)
-print(user_memory)
+# print(user_memory)
 
-# Get memory context for LLM
+# Get general memory context for LLM
 context = memory_manager.get_memory_context(user_id)
 print(context)
 
+
+# Get specific message related memory context for LLM
+context = memory_manager.get_memory_context(
+    user_id, message="there is a new basketball court in the park"
+)
+print(context)
+
+
 beliefs = memory_manager.get_beliefs(user_id)
-print(beliefs)
+# print(beliefs)

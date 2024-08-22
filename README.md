@@ -2,7 +2,7 @@
 
 > Memory-Driven Reasoning for Smarter AI Agents
 
-GPT Memory is a Python library that introduces a new approach to improving LLM reasoning through actionable insights (beliefs) learned over time from memory. Supercharge your AI agents with personalized, context-aware responses.
+GPT Memory is a library that introduces a new approach to improving LLM reasoning through actionable insights (beliefs) learned over time from memory. Supercharge your AI agents with personalized, context-aware responses.
 
 [![PyPI version](https://badge.fury.io/py/gpt-memory.svg)](https://badge.fury.io/py/gptmem)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/license/apache-2-0)
@@ -90,7 +90,7 @@ GPT Memory introduces a new approach to LLM reasoning: actionable beliefs genera
 #### Output:
 
 ```json
-{"beliefs": ",- Suggest mediation at 9:30\n- Suggest spending time with Charlie and Luna when user is sad"}
+{"beliefs": ",- Suggest mediation at 9:30pm\n- Suggest spending time with Charlie and Luna for emotional well-being"}
 ```
 
 ## 🛠️ API Reference

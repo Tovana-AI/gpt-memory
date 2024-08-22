@@ -228,12 +228,37 @@ class GPTMemory:
         )
         return beliefs if beliefs != "None" else None
 
-    def get_memory_context(self, user_id: str) -> str:
+    def get_memory_context(
+        self,
+        user_id: str,
+        message: Optional[str] = "",
+    ) -> str:
         if user_id in self.memory:
             context = "User Memory:\n"
             for key, value in self.memory[user_id].items():
                 if key != "last_updated":
                     context += f"{key}: {value}\n"
+
+            if message:
+                prompt = ChatPromptTemplate.from_messages(
+                    [
+                        (
+                            "system",
+                            "You are an AI assistant that filters relevant information from user memory based on a given message.",
+                        ),
+                        (
+                            "human",
+                            "User Memory:\n{context}\n\nMessage: {message}\n\nReturn only the relevant information from the user memory that relates to the message. Provide the output in the same format as the input memory, with keys and values.",
+                        ),
+                    ]
+                )
+
+                chain = prompt | self.llm | StrOutputParser()
+
+                filtered_context = chain.invoke(
+                    {"context": context, "message": message}
+                )
+                return filtered_context
             return context
         return "No memory found for this user."
 
@@ -266,5 +291,5 @@ class GPTMemoryManager:
     def get_beliefs(self, user_id: str) -> str:
         return self.memory.get_beliefs(user_id) or None
 
-    def get_memory_context(self, user_id: str) -> str:
-        return self.memory.get_memory_context(user_id)
+    def get_memory_context(self, user_id: str, message: Optional[str] = "") -> str:
+        return self.memory.get_memory_context(user_id, message)

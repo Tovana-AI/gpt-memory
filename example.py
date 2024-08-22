@@ -27,11 +27,13 @@ memory_manager.update_memory(user_id, "Our baby was just born!")
 
 # Get user memory
 user_memory = memory_manager.get_memory(user_id)
-print(user_memory)
+# print(user_memory)
 
 # Get memory context for LLM
-context = memory_manager.get_memory_context(user_id)
+context = memory_manager.get_memory_context(
+    user_id, message="wow my life has changed so much :( I miss my old life"
+)
 print(context)
 
 beliefs = memory_manager.get_beliefs(user_id)
-print(beliefs)
+# print(beliefs)

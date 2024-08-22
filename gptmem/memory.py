@@ -244,11 +244,13 @@ class GPTMemory:
                     [
                         (
                             "system",
-                            "You are an AI assistant that filters relevant information from user memory based on a given message.",
+                            "You are an AI assistant that filters relevant information from user memory based on a given message."
+                            "Return only the relevant information from the user memory that relates to the message."
+                            "Provide the output in the same format as the input memory",
                         ),
                         (
                             "human",
-                            "User Memory:\n{context}\n\nMessage: {message}\n\nReturn only the relevant information from the user memory that relates to the message. Provide the output in the same format as the input memory, with keys and values.",
+                            "User Memory:\n{context}\n\nMessage: {message}\n\nUser Memory:",
                         ),
                     ]
                 )

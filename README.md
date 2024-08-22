@@ -49,8 +49,9 @@ pip install gptmem
 from gptmem import GPTMemoryManager
 
 business_description = "an AI therapist"
-# Initialize with your OpenAI API key
-memory_manager = GPTMemoryManager(api_key="your-api-key-here", business_description=business_description, include_beliefs=True)
+
+# Initialize with your preferred LLM provider and API key (Refer to the documentation for specific models)
+memory_manager = GPTMemoryManager(api_key="your-llm-provider-api-key-here",provider="anthropic", business_description=business_description, include_beliefs=True)
 
 # Update user memory
 memory_manager.update_user_memory("user123", "I just moved from New York to Paris for work.")

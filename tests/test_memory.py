@@ -1,12 +1,14 @@
-import os
 import json
+import os
 import uuid
+
 import pytest
 
 from gptmem import GPTMemoryManager
 
 memory_manager = GPTMemoryManager(
     api_key=os.environ["OPENAI_API_KEY"],
+    provider="openai",
     business_description="A personal therapist",
     include_beliefs=True,
 )

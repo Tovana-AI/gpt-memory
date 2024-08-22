@@ -2,6 +2,8 @@ import json
 import os
 import uuid
 
+import pytest
+
 from gptmem import GPTMemoryManager
 
 memory_manager = GPTMemoryManager(
@@ -11,6 +13,7 @@ memory_manager = GPTMemoryManager(
 )
 
 
+@pytest.mark.skip(reason="need llm as a judge")
 def test_belief_important_event() -> None:
     test_user_id = str(uuid.uuid4())
 

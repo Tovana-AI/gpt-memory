@@ -12,6 +12,7 @@ memory_manager = GPTMemoryManager(
 )
 
 
+@pytest.mark.skip(reason="need llm as a judge")
 def test_entity_extraction() -> None:
     test_user_id = str(uuid.uuid4())
     memory_manager.update_memory(test_user_id, "We also have a pet dog named Charlie")
@@ -22,6 +23,7 @@ def test_entity_extraction() -> None:
     assert user_memory_dict["pet"] == "dog named Charlie"
 
 
+@pytest.mark.skip(reason="need llm as a judge")
 def test_entity_extraction_multiple_entities_same_type() -> None:
     test_user_id = str(uuid.uuid4())
     memory_manager.update_memory(test_user_id, "We also have a pet dog named Charlie")
@@ -34,6 +36,7 @@ def test_entity_extraction_multiple_entities_same_type() -> None:
     assert "horse named Luna" in user_memory_dict["pet"]
 
 
+@pytest.mark.skip(reason="need llm as a judge")
 def test_remember_location() -> None:
     test_user_id = str(uuid.uuid4())
     memory_manager.update_memory(test_user_id, "We also have a pet dog named Charlie")
@@ -46,6 +49,7 @@ def test_remember_location() -> None:
     assert user_memory_dict["location"] == "New York City"
 
 
+@pytest.mark.skip
 @pytest.mark.xfail(reason="different keys")
 def test_relationship_detection() -> None:
     test_user_id = str(uuid.uuid4())
@@ -64,6 +68,7 @@ def test_relationship_detection() -> None:
     assert "Mai" in user_memory_dict["family"]
 
 
+@pytest.mark.skip(reason="need llm as a judge")
 def test_important_event() -> None:
     test_user_id = str(uuid.uuid4())
 

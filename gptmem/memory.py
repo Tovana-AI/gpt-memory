@@ -1,20 +1,34 @@
 import json
+import logging
 import os
-from typing import Dict, List, Optional
-import openai
 from datetime import datetime
+from typing import Dict, Optional
+
+import openai
+from langchain_core.language_models import BaseChatModel
+from langchain_core.output_parsers import JsonOutputParser, StrOutputParser
+from langchain_core.prompts import (
+    ChatPromptTemplate,
+    FewShotPromptTemplate,
+    PromptTemplate,
+)
+
+from gptmem.llms.llms import GenericLLMProvider
+
+MAX_KEY_LENGTH = 17
 
 
 class GPTMemory:
     def __init__(
         self,
         api_key: str,
+        llm: BaseChatModel,
         business_description: str,
         include_beliefs: bool = False,
         memory_file: str = "memory.json",
     ):
-        self.api_key = api_key
-        openai.api_key = self.api_key
+        self.api_key = api_key  # TODO remove
+        self.llm = llm
         self.memory_file = memory_file
         self.business_description = business_description
         self.include_beliefs = include_beliefs
@@ -56,13 +70,13 @@ class GPTMemory:
                     self.memory[user_id][existing_key].append(value)
                 else:
                     # Resolve conflict and update the value
-                    self.memory[user_id][existing_key] = self.resolve_conflict(
+                    new_value = self.resolve_conflict(
                         existing_key, self.memory[user_id].get(existing_key), value
                     )
+                    self.memory[user_id][existing_key] = new_value
             else:
                 self.memory[user_id][key] = value
 
-        # Add timestamp for the last update
         self.memory[user_id]["last_updated"] = datetime.now().isoformat()
 
         if self.include_beliefs:
@@ -75,125 +89,143 @@ class GPTMemory:
         return self.memory[user_id]
 
     def find_relevant_key(self, user_id: str, new_key: str) -> Optional[str]:
-        prompt = f"""
-        Find the most relevant existing key in the user's memory for the new information.
-        If no relevant key exists, return "None".
+        existing_keys = ", ".join(self.memory[user_id].keys())
+        template = """
+               Find the most relevant existing key in the user's memory for the new information.
+               If no relevant key exists, return "None".
 
-        Existing keys: {', '.join(self.memory[user_id].keys())}
-        New key: {new_key}
+               Existing keys: {existing_keys}
+               New key: {new_key}
 
-        Return only the existing key that is most relevant, or "None" if no relevant key exists.
-        """
+               Return only the existing key that is most relevant, or "None" if no relevant key exists.
+               """
 
-        response = openai.chat.completions.create(
-            model="gpt-4o-mini",
-            messages=[
-                {
-                    "role": "system",
-                    "content": "You are an AI assistant that finds relevant keys in user memory.",
-                },
-                {"role": "user", "content": prompt},
-            ],
-            temperature=0,
+        prompt = ChatPromptTemplate.from_messages(
+            [
+                (
+                    "system",
+                    "You are an AI assistant that finds relevant keys in user memory",
+                ),
+                ("human", template),
+            ]
         )
+        chain = prompt | self.llm | StrOutputParser()
+        relevant_key = chain.invoke(
+            input={
+                "user_id": user_id,
+                "new_key": new_key,
+                "existing_keys": existing_keys,
+            }
+        )
+        if relevant_key == "None" or len(relevant_key) > MAX_KEY_LENGTH:
+            # hack to not include cases with 'None' to be a key in memory
+            # or cases where model ignores instruction and adds reasoning as a key
+            return None
 
-        relevant_key = response.choices[0].message.content.strip()
-        return relevant_key if relevant_key != "None" else None
+        return relevant_key
 
     def resolve_conflict(self, key: str, old_value: str, new_value: str) -> str:
-        prompt = f"""
-        Resolve the conflict between the old and new values for the following key in the user's memory:
+        template = """
+                Resolve the conflict between the old and new values for the following key in the user's memory:
 
-        Key: {key}
-        Old value: {old_value}
-        New value: {new_value}
+                Key: {key}
+                Old value: {old_value}
+                New value: {new_value}
 
-        Determine which value is more current or relevant. If the new value represents an update or change, use it.
-        If the old value is still valid and the new value is complementary, combine them. For example, if the key is "pet" and old value is "Charlie the dog" and the new value is "Luna the horse", combine them as "{"{pets: ['Charlie the dog', 'Luna the horse']}"}.
-        Return the resolved value as a string. You must keep the value short and concise with no explanation.
-        """
+                Determine which value is more current or relevant. If the new value represents an update or change, use it.
+                If the old value is still valid and the new value is complementary, combine them.
+                For example, if the key is "pet" and old value is "Charlie the dog" and the new value is "Luna the horse", combine them as "['Charlie the dog', 'Luna the horse']".
+                Return the resolved value as a string. You must keep the value short and concise with no explanation.
+                """
 
-        response = openai.chat.completions.create(
-            model="gpt-4o",
-            messages=[
-                {
-                    "role": "system",
-                    "content": "You are an AI assistant that resolves conflicts in user memory updates.",
-                },
-                {"role": "user", "content": prompt},
-            ],
-            temperature=0,
+        prompt = ChatPromptTemplate.from_messages(
+            [
+                (
+                    "system",
+                    "You are an AI assistant that resolves conflicts in user memory updates",
+                ),
+                ("human", template),
+            ]
+        )
+        chain = prompt | self.llm | StrOutputParser()
+        resolved_value = chain.invoke(
+            input={"key": key, "old_value": old_value, "new_value": new_value}
         )
 
-        resolved_value = response.choices[0].message.content.strip()
         return resolved_value
 
     def extract_information(self, message: str) -> Dict[str, str]:
-        prompt = f"""
-        Extract relevant personal information from the following message. 
-        Focus on key details such as location, preferences, important events, or any other significant personal information.
-        Ignore irrelevant or redundant information. Try to keep all relevant information under the same key. Less is more.
+        system_prompt = """
+          You are an AI assistant that extracts relevant personal information from messages
+          Extract relevant personal information from the following message. 
+          Focus on key details such as location, preferences, important events, or any other significant personal information.
+          Ignore irrelevant or redundant information. Try to keep all relevant information under the same key. Less is more.
 
-        Message: {message}
+          Return the extracted information as a JSON object with appropriate keys (lower case) and values.
+          Do not use any specific format (like ```json), just provide the extracted information as a JSON.
+          Remembers that the memory could be very long so try to keep values concise and short with no explanations.
+          """
 
-        Return the extracted information as a JSON object with appropriate keys (lower case) and values.
-        Do not use any specific format (like ```json), just provide the extracted information as a JSON.
-        Remembers that the memory could be very long so try to keep values concise and short with no explanations.
-        """
-
-        response = openai.chat.completions.create(
-            model="gpt-4o",
-            messages=[
-                {
-                    "role": "system",
-                    "content": "You are an AI assistant that extracts relevant personal information from messages.",
-                },
-                {"role": "user", "content": prompt},
-            ],
-            temperature=0,
+        prompt = ChatPromptTemplate.from_messages(
+            [
+                (
+                    "system",
+                    system_prompt,
+                ),
+                ("human", "Message: {user_message}"),
+            ]
         )
+        chain = prompt | self.llm | JsonOutputParser()
+        extracted_info = chain.invoke({"user_message": message})
 
-        extracted_info = json.loads(response.choices[0].message.content)
         return extracted_info
 
     def generate_new_beliefs(self, user_id: str):
-        examples = """
-        Input - business_description: a commerce site, memories: {pets: ['dog named charlie', 'horse named luna'], beliefs: None
-        Output (JSON) - {"beliefs": "- suggest pet products for dogs and horses"}
-
-        Input - business_description: an AI therapist, memories: {pets: ['dog named charlie', 'horse named luna', sleep_time: '10pm'], beliefs: 'Suggest mediation at 9:30pm'}
-        Output (JSON) - {"beliefs": "- Suggest mediation at 9:30\\n- Suggest spending time with Charlie and Luna when user is sad"}
-        
-        Input - business_description: an AI personal assistant, memories: {pets: ['dog named charlie', 'horse named luna', sleep_time: '10pm'], beliefs: None}
-        Output (JSON) - {"beliefs": "- Don't schedule meetings after 9pm"}
-        """
-
-        prompt = f"""
-        Given a business description, memories, and existing belief context, generate new actionable beliefs if necessary. 
-        If no new beliefs are found, return 'None'.
-
-        {examples}
-        
-        Do not use any specific format (like ```json), just provide the extracted information as a JSON.
-
-        Input - business_description: {self.business_description}, memories: {self.get_memory(user_id)}, beliefs: {self.memory.get("beliefs")}
-        Output (JSON) - 
-        """
-
-        response = openai.chat.completions.create(
-            model="gpt-4o",
-            messages=[
-                {
-                    "role": "system",
-                    "content": "You are an AI assistant that extracts relevant actionable "
-                    "insights based on memory about the user and their business description.",
-                },
-                {"role": "user", "content": prompt},
-            ],
-            temperature=0,
+        example_prompt = PromptTemplate.from_template(
+            """
+            Input - {input}
+            Output (JSON) - {output} 
+            """,
         )
 
-        beliefs = response.choices[0].message.content.strip()
+        examples = [
+            {
+                "input": "business_description: a commerce site, memories: {{pets: ['dog named charlie', 'horse named luna'], beliefs: None}}",
+                "output": '{{"beliefs": "- suggest pet products for dogs and horses"}}',
+            },
+            {
+                "input": "business_description: an AI therapist, memories: {{pets: ['dog named charlie', 'horse named luna', sleep_time: '10pm'], beliefs: 'Suggest mediation at 9:30pm'}}",
+                "output": '{{"beliefs": "- Suggest mediation at 9:30\\n- Suggest spending time with Charlie and Luna when user is sad"}}',
+            },
+            {
+                "input": "business_description: an AI personal assistant, memories: {{pets: ['dog named charlie', 'horse named luna', sleep_time: '10pm'], beliefs: None}}",
+                "output": '{{"beliefs": "- Do not schedule meetings after 9pm"}}',
+            },
+        ]
+
+        few_shot_prompt = FewShotPromptTemplate(
+            examples=examples,
+            example_prompt=example_prompt,
+            prefix="""
+                    You are an AI assistant that extracts relevant actionable insights based on memory about the user and their business description
+                    Given a business description, memories, and existing belief context, generate new actionable beliefs if necessary. 
+                                                                If no new beliefs are found, return 'None'""",
+            suffix="""
+                    Do not use any specific format (like ```json), just provide the extracted information as a JSON.
+                    Input - business_description: {business_description}, memories: {memories}, beliefs: {beliefs}
+                    Output (JSON) - 
+                    """,
+            input_variables=["business_description", "memories", "beliefs"],
+        )
+
+        chain = few_shot_prompt | self.llm | StrOutputParser()
+        beliefs = chain.invoke(
+            {
+                "business_description": self.business_description,
+                "memories": self.get_memory(user_id),
+                "beliefs": self.memory.get("beliefs"),
+            }
+        )
         return beliefs if beliefs != "None" else None
 
     def get_memory_context(self, user_id: str) -> str:
@@ -210,11 +242,17 @@ class GPTMemoryManager:
     def __init__(
         self,
         api_key: str,
+        provider: str,
         business_description: str = "A personal AI assistant",
         include_beliefs: bool = True,
+        **kwargs,
     ):
+        # initialize model
+        llm = GenericLLMProvider.from_provider(provider=provider, **kwargs).llm
+
         self.memory = GPTMemory(
-            api_key=api_key,
+            api_key=api_key,  # TODO remove
+            llm=llm,
             business_description=business_description,
             include_beliefs=include_beliefs,
         )

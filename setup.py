@@ -11,14 +11,14 @@ with open("requirements.txt", "r") as f:
     ]
 
 setup(
-    name="memory",
-    version="0.0.2",
-    description="Memory management system to enhance AI agents with personalized, context-aware responses",
-    package_dir={"memory": "memory"},
+    name="tovana",
+    version="0.0.1",
+    description="Memory management library to enhance AI agents with smarter, personalized, context-aware responses",
+    package_dir={"memory": "tovana"},
     packages=find_packages(exclude=exclude_packages),
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/assafelovic/gpt-memory",
+    url="https://github.com/assafelovic/tovana",
     author="Assaf Elovic",
     author_email="assaf.elovic@gmail.com",
     classifiers=[

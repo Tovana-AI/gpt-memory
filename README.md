@@ -12,7 +12,7 @@ Current AI memory systems face significant drawbacks that limit their ability to
 
 The proposed AI agent memory system is designed to augment human memory and enhance AI agents' capabilities. Its purpose is to create more personalized, adaptive, and context-aware AI interactions by simulating human-like memory processes. This system aims to bridge the gap between static knowledge bases and dynamic, experience-based learning, allowing AI agents to evolve their understanding and behavior over time.
 
-The system is a comprehensive memory and belief management framework for AI agents. It includes components for processing events, storing short-term and long-term memories, managing beliefs, creating associations, and informing decision-making processes. The core concept revolves around converting experiences (events) into memories, which in turn shape beliefs. These beliefs then influence the agent's reasoning, responses, and actions.
+The system is a comprehensive memory and belief management framework for AI agents. It includes components for processing events, storing short-term and long-term memories, managing beliefs, creating associations, and informing decision-making processes. **The core concept revolves around converting experiences (events) into memories, which in turn shape beliefs.** These beliefs then influence the agent's reasoning, responses, and actions.
 
 ## 🌟 Features
 

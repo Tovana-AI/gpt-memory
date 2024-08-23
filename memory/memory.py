@@ -1,70 +1,68 @@
+import asyncio
 import json
 import os
 from datetime import datetime
 from typing import Dict, Optional
 
+import aiofiles
 from langchain_core.language_models import BaseChatModel
 from langchain_core.output_parsers import JsonOutputParser, StrOutputParser
-from langchain_core.prompts import (
-    ChatPromptTemplate,
-    FewShotPromptTemplate,
-    PromptTemplate,
-)
+from langchain_core.prompts import (ChatPromptTemplate, FewShotPromptTemplate,
+                                    PromptTemplate)
 
 from memory.llms.llms import GenericLLMProvider
 
 MAX_KEY_LENGTH = 17
 
 
-class Memory:
+class BaseAsyncMemory:
     def __init__(
         self,
-        api_key: str,
         llm: BaseChatModel,
         business_description: str,
         include_beliefs: bool = False,
         memory_file: str = "memory.json",
     ):
-        self.api_key = api_key  # TODO remove
         self.llm = llm
         self.memory_file = memory_file
         self.business_description = business_description
         self.include_beliefs = include_beliefs
-        self.memory = self._load_memory()
+        self.memory = {}
 
-    def _load_memory(self) -> Dict[str, Dict]:
+    async def _load_memory(self) -> Dict[str, Dict]:
         if os.path.exists(self.memory_file):
-            with open(self.memory_file, "r") as f:
-                return json.load(f)
+            async with aiofiles.open(self.memory_file, "r") as f:
+                content = await f.read()
+                return json.loads(content)
         return {}
 
-    def _save_memory(self):
-        with open(self.memory_file, "w") as f:
-            json.dump(self.memory, f, indent=2)
+    async def _save_memory(self):
+        async with aiofiles.open(self.memory_file, "w") as f:
+            await f.write(json.dumps(self.memory, indent=2))
 
-    def _get_memory(self, user_id: str) -> Optional[str]:
+    async def _get_memory(self, user_id: str) -> Optional[str]:
         if user_id in self.memory:
             return json.dumps(self.memory[user_id], indent=2)
         return None
 
-    def get_beliefs(self, user_id: str) -> Optional[str]:
+    async def get_beliefs(self, user_id: str) -> Optional[str]:
         if user_id in self.memory:
             return self.memory[user_id].get("beliefs")
         return None
 
-    def update_memory(self, user_id: str, message: str) -> Dict:
+    async def update_memory(self, user_id: str, message: str) -> Dict:
         if user_id not in self.memory:
             self.memory[user_id] = {}
 
-        extracted_info = self._extract_information(message)
+        extracted_info = await self._extract_information(message)
 
         for key, value in extracted_info.items():
-            existing_key = self._find_relevant_key(user_id, key)
+            existing_key = await self._find_relevant_key(user_id, key)
             if existing_key:
                 if isinstance(self.memory[user_id].get(existing_key), list):
                     self.memory[user_id][existing_key].append(value)
                 else:
-                    new_value = self._resolve_conflict(
+                    new_value = await self._resolve_conflict(
                         existing_key, self.memory[user_id].get(existing_key), value
                     )
                     self.memory[user_id][existing_key] = new_value
@@ -74,14 +72,14 @@ class Memory:
         self.memory[user_id]["last_updated"] = datetime.now().isoformat()
 
         if self.include_beliefs:
-            new_beliefs = self._generate_new_beliefs(user_id)
+            new_beliefs = await self._generate_new_beliefs(user_id)
             if new_beliefs:
                 self.memory[user_id]["beliefs"] = new_beliefs
 
-        self._save_memory()
+        await self._save_memory()
         return self.memory[user_id]
 
-    def _find_relevant_key(self, user_id: str, new_key: str) -> Optional[str]:
+    async def _find_relevant_key(self, user_id: str, new_key: str) -> Optional[str]:
         existing_keys = ", ".join(self.memory[user_id].keys())
         template = """
                Find the most relevant existing key in the user's memory for the new information.
@@ -93,12 +91,17 @@ class Memory:
                Return only the existing key that is most relevant, or "None" if no relevant key exists.
                """
 
-        prompt = ChatPromptTemplate.from_messages([
-            ("system", "You are an AI assistant that finds relevant keys in user memory"),
-            ("human", template),
-        ])
+        prompt = ChatPromptTemplate.from_messages(
+            [
+                (
+                    "system",
+                    "You are an AI assistant that finds relevant keys in user memory",
+                ),
+                ("human", template),
+            ]
+        )
         chain = prompt | self.llm | StrOutputParser()
-        relevant_key = chain.invoke(
+        relevant_key = await chain.ainvoke(
             input={
                 "user_id": user_id,
                 "new_key": new_key,
@@ -110,7 +113,7 @@ class Memory:
 
         return relevant_key
 
-    def _resolve_conflict(self, key: str, old_value: str, new_value: str) -> str:
+    async def _resolve_conflict(self, key: str, old_value: str, new_value: str) -> str:
         template = """
                 Resolve the conflict between the old and new values for the following key in the user's memory:
 
@@ -124,18 +127,23 @@ class Memory:
                 Return the resolved value as a string. You must keep the value short and concise with no explanation.
                 """
 
-        prompt = ChatPromptTemplate.from_messages([
-            ("system", "You are an AI assistant that resolves conflicts in user memory updates"),
-            ("human", template),
-        ])
+        prompt = ChatPromptTemplate.from_messages(
+            [
+                (
+                    "system",
+                    "You are an AI assistant that resolves conflicts in user memory updates",
+                ),
+                ("human", template),
+            ]
+        )
         chain = prompt | self.llm | StrOutputParser()
-        resolved_value = chain.invoke(
+        resolved_value = await chain.ainvoke(
             input={"key": key, "old_value": old_value, "new_value": new_value}
         )
 
         return resolved_value
 
-    def _extract_information(self, message: str) -> Dict[str, str]:
+    async def _extract_information(self, message: str) -> Dict[str, str]:
         system_prompt = """
           You are an AI assistant that extracts relevant personal information from messages
           Extract relevant personal information from the following message. 
@@ -147,16 +155,18 @@ class Memory:
           Remembers that the memory could be very long so try to keep values concise and short with no explanations.
           """
 
-        prompt = ChatPromptTemplate.from_messages([
-            ("system", system_prompt),
-            ("human", "Message: {user_message}"),
-        ])
+        prompt = ChatPromptTemplate.from_messages(
+            [
+                ("system", system_prompt),
+                ("human", "Message: {user_message}"),
+            ]
+        )
         chain = prompt | self.llm | JsonOutputParser()
-        extracted_info = chain.invoke({"user_message": message})
+        extracted_info = await chain.ainvoke({"user_message": message})
 
         return extracted_info
 
-    def _generate_new_beliefs(self, user_id: str):
+    async def _generate_new_beliefs(self, user_id: str):
         example_prompt = PromptTemplate.from_template(
             """
             Examples that will help you generate an amazing answer
@@ -196,16 +206,16 @@ class Memory:
         )
 
         chain = few_shot_prompt | self.llm | StrOutputParser()
-        beliefs = chain.invoke(
+        beliefs = await chain.ainvoke(
             {
                 "business_description": self.business_description,
-                "memories": self._get_memory(user_id),
+                "memories": await self._get_memory(user_id),
                 "beliefs": self.memory.get("beliefs"),
             }
         )
         return beliefs if beliefs != "None" else None
 
-    def get_memory_context(
+    async def get_memory_context(
         self,
         user_id: str,
         message: Optional[str] = "",
@@ -217,37 +227,57 @@ class Memory:
                     context += f"{key}: {value}\n"
 
             if message:
-                prompt = ChatPromptTemplate.from_messages([
-                    (
-                        "system",
-                        "You are an AI assistant that filters relevant information from user memory based on a given message."
-                        "Return only the relevant information from the user memory that relates to the message."
-                        "Provide the output in the same format as the input memory",
-                    ),
-                    (
-                        "human",
-                        "User Memory:\n{context}\n\nMessage: {message}\n\nUser Memory:",
-                    ),
-                ])
+                prompt = ChatPromptTemplate.from_messages(
+                    [
+                        (
+                            "system",
+                            "You are an AI assistant that filters relevant information from user memory based on a given message."
+                            "Return only the relevant information from the user memory that relates to the message."
+                            "Provide the output in the same format as the input memory",
+                        ),
+                        (
+                            "human",
+                            "User Memory:\n{context}\n\nMessage: {message}\n\nUser Memory:",
+                        ),
+                    ]
+                )
 
                 chain = prompt | self.llm | StrOutputParser()
 
-                filtered_context = chain.invoke(
+                filtered_context = await chain.ainvoke(
                     {"context": context, "message": message}
                 )
                 return filtered_context
             return context
         return "No memory found for this user."
 
-    def delete_memory(self, user_id: str) -> bool:
+    async def delete_memory(self, user_id: str) -> bool:
         if user_id in self.memory:
             del self.memory[user_id]
-            self._save_memory()
+            await self._save_memory()
             return True
         return False
 
 
-class MemoryManager:
+class SyncMemory(BaseAsyncMemory):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.memory = asyncio.run(self._load_memory())
+
+    def update_memory(self, user_id: str, message: str) -> Dict:
+        return asyncio.run((super().update_memory(user_id, message)))
+
+    def get_beliefs(self, user_id: str) -> Optional[str]:
+        return asyncio.run(super().get_beliefs(user_id))
+
+    def get_memory_context(self, user_id: str, message: Optional[str] = "") -> str:
+        return asyncio.run(super().get_memory_context(user_id, message))
+
+    def delete_memory(self, user_id: str) -> bool:
+        return asyncio.run(super().delete_memory(user_id))
+
+
+class BaseMemoryManager:
     def __init__(
         self,
         api_key: str,
@@ -256,19 +286,56 @@ class MemoryManager:
         include_beliefs: bool = True,
         **kwargs,
     ):
-        llm = GenericLLMProvider.from_provider(
+        self.llm = GenericLLMProvider.from_provider(
             provider=provider, api_key=api_key, **kwargs
         ).llm
+        self.business_description = business_description
+        self.include_beliefs = include_beliefs
 
-        self.memory = Memory(
-            api_key=api_key,  # TODO remove
-            llm=llm,
-            business_description=business_description,
-            include_beliefs=include_beliefs,
+
+class AsyncMemoryManager(BaseMemoryManager):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.memory = BaseAsyncMemory(
+            llm=self.llm,
+            business_description=self.business_description,
+            include_beliefs=self.include_beliefs,
+        )
+
+    async def get_memory(self, user_id: str) -> str:
+        return (
+            await self.memory._get_memory(user_id) or "No memory found for this user."
+        )
+
+    async def update_memory(self, user_id: str, message: str):
+        await self.memory.update_memory(user_id, message)
+
+    async def delete_memory(self, user_id: str) -> bool:
+        return await self.memory.delete_memory(user_id)
+
+    async def get_beliefs(self, user_id: str) -> str:
+        return await self.memory.get_beliefs(user_id) or None
+
+    async def get_memory_context(
+        self, user_id: str, message: Optional[str] = ""
+    ) -> str:
+        return await self.memory.get_memory_context(user_id, message)
+
+
+class MemoryManager(BaseMemoryManager):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.memory = SyncMemory(
+            llm=self.llm,
+            business_description=self.business_description,
+            include_beliefs=self.include_beliefs,
         )
 
     def get_memory(self, user_id: str) -> str:
-        return self.memory._get_memory(user_id) or "No memory found for this user."
+        return (
+            asyncio.run(self.memory._get_memory(user_id))
+            or "No memory found for this user."
+        )
 
     def update_memory(self, user_id: str, message: str):
         self.memory.update_memory(user_id, message)

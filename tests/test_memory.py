@@ -4,9 +4,9 @@ import uuid
 
 import pytest
 
-from memory import MemoryManager
+from memory import SyncMemoryManager
 
-memory_manager = MemoryManager(
+memory_manager = SyncMemoryManager(
     api_key=os.environ["OPENAI_API_KEY"],
     provider="openai",
     business_description="A personal therapist",

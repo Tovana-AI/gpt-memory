@@ -13,13 +13,12 @@ Tovana is a library that introduces a new approach to improving LLM reasoning th
 </div>
 
 ## Why Tovana?
-Current AI memory systems face significant drawbacks that limit their ability to mimic human-like intelligence. These include their static nature (vector dbs / semantic search), lack of contextual understanding, inability to learn from experience or form beliefs, poor handling of contradictions, limited associative capabilities, and absence of emotional intelligence. Additionally, AI agents struggle with abstraction, lack meta-cognitive abilities, and don't have mechanisms for selectively retaining or forgetting information. These shortcomings collectively restrict AI agents' adaptability, decision-making, and ability to navigate complex, real-world scenarios effectively.
 
-The proposed AI agent memory system is designed to augment human memory and enhance AI agents' capabilities. Its purpose is to create more personalized, adaptive, and context-aware AI interactions by simulating human-like memory processes. This system aims to bridge the gap between static knowledge bases and dynamic, experience-based learning, allowing AI agents to evolve their understanding and behavior over time.
+Current LLMs face significant limitations in their ability to learn and adapt from user-specific interactions over time. While LLMs excel at processing vast amounts of pre-trained data, they struggle with ongoing personalization and context-aware learning. This gap restricts their ability to provide truly adaptive and evolving AI experiences.
 
-The system is a comprehensive memory and belief management framework for AI agents. It includes components for processing events, storing short-term and long-term memories, managing beliefs, creating associations, and informing decision-making processes. **The core concept revolves around converting experiences (events) into memories, which in turn shape beliefs.** These beliefs then influence the agent's reasoning, responses, and actions.
+Tovana aims to address these challenges by providing a comprehensive memory and belief management framework for AI agents. Its core concept revolves around converting experiences (events) into memories, which in turn shape beliefs. These beliefs then influence the agent's reasoning, responses, and actions.
 
-
+By simulating human-like memory processes, Tovana enables more personalized, adaptive, and context-aware AI interactions. This framework bridges the gap between static knowledge bases and dynamic, experience-based learning, allowing AI agents to evolve their understanding and behavior over time. Tovana offers a powerful tool to create AI applications that can learn from and adapt to individual users, leading to more engaging and effective AI-driven experiences.
 ## 🌟 Features
 
 | Feature                          | Status      | Description                                                                                 |

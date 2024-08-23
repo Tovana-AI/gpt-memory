@@ -13,6 +13,14 @@ GPT Memory is a library powered by Tovana that introduces a new approach to impr
 [![License: Apache 2](https://img.shields.io/badge/License-Apache-yellow.svg)](https://opensource.org/license/apache-2-0)
 </div>
 
+## 🤔 Why GPT Memory?
+
+Current LLMs face significant limitations in their ability to learn and adapt from user-specific interactions over time. While LLMs excel at processing vast amounts of data, they struggle with ongoing personalization and context-aware learning. This gap restricts their ability to provide truly adaptive and evolving AI experiences.
+
+Our Memory manager aims to address these challenges by providing a comprehensive memory and belief management framework for AI agents. Its core concept revolves around converting experiences (events) into memories, which in turn shape beliefs. These beliefs then influence the agent's reasoning, responses, and actions.
+
+By simulating human-like memory processes, GPT Memory enables more personalized, adaptive, and context-aware AI interactions. This framework bridges the gap between static knowledge bases and dynamic, experience-based learning, allowing AI agents to evolve their understanding and behavior over time.
+
 ## 🚀 Quick Start
 
 1. Install Tovana:
@@ -48,14 +56,6 @@ print(context)  # Output: 'User Memory:\n location: Paris,\n previous_location: 
 beliefs = memory_manager.get_beliefs(user_id=user_id)
 print(beliefs)  # Output: {"beliefs": "- Provide recommendations for products shipping to Paris"}
 ```
-
-## 🤔 Why GPT Memory?
-
-Current LLMs face significant limitations in their ability to learn and adapt from user-specific interactions over time. While LLMs excel at processing vast amounts of data, they struggle with ongoing personalization and context-aware learning. This gap restricts their ability to provide truly adaptive and evolving AI experiences.
-
-Our Memory manager aims to address these challenges by providing a comprehensive memory and belief management framework for AI agents. Its core concept revolves around converting experiences (events) into memories, which in turn shape beliefs. These beliefs then influence the agent's reasoning, responses, and actions.
-
-By simulating human-like memory processes, GPT Memory enables more personalized, adaptive, and context-aware AI interactions. This framework bridges the gap between static knowledge bases and dynamic, experience-based learning, allowing AI agents to evolve their understanding and behavior over time.
 
 ## 🏗️ Architecture
 <img width="663" alt="Screenshot 2024-08-21 at 9 04 07" src="https://github.com/user-attachments/assets/2bdfdaa8-e91c-45b0-b200-2e567daadc5d">

@@ -1,8 +1,9 @@
 import json
 import os
+import time
 import uuid
 
-from memory import MemoryManager
+from memory.memory import MemoryManager
 
 user_id = str(uuid.uuid4())
 # Initialize the memory manager with your OpenAI API key
@@ -13,6 +14,7 @@ memory_manager = MemoryManager(
     business_description="A personal therapist",
     include_beliefs=True,
 )
+start_time = time.time()
 
 # Update user memory
 memory_manager.update_memory(user_id, "We also have a pet dog named Charlie")
@@ -43,3 +45,6 @@ print(context)
 
 beliefs = memory_manager.get_beliefs(user_id)
 # print(beliefs)
+
+end_time = time.time()
+print(f"Total time taken: {end_time - start_time:.2f} seconds")

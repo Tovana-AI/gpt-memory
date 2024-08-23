@@ -6,6 +6,7 @@ from memory import MemoryManager
 
 memory_manager = MemoryManager(
     api_key=os.environ["OPENAI_API_KEY"],
+    provider="openai",
     business_description="A personal therapist",
     include_beliefs=True,
 )

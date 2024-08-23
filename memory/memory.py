@@ -235,7 +235,7 @@ class BaseAsyncMemory:
             example_prompt=example_prompt,
             prefix="""
                     You are an AI assistant that extracts relevant actionable insights (beliefs) based on memory about the user and their business description
-                    Beliefs are actionable insights that can be used by the AI to provide better assistance related to its business description and goal.
+                    Beliefs are actionable insights that can be used by the AI to provide better assistance and reasoning related to their business description and goals.
                     Given a business description, memories, and existing belief context, generate new beliefs only if necessary. 
                     If no new beliefs are found, return 'None'""",
             suffix="""

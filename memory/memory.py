@@ -2,7 +2,7 @@ import asyncio
 import json
 import os
 from datetime import datetime
-from typing import Dict, Optional
+from typing import Dict, Optional, List
 
 import aiofiles
 from langchain_core.language_models import BaseChatModel
@@ -40,7 +40,7 @@ class BaseAsyncMemory:
         async with aiofiles.open(self.memory_file, "w") as f:
             await f.write(json.dumps(self.memory, indent=2))
 
-    async def _get_memory(self, user_id: str) -> Optional[str]:
+    async def get_memory(self, user_id: str) -> Optional[str]:
         if user_id in self.memory:
             return json.dumps(self.memory[user_id], indent=2)
         return None
@@ -55,7 +55,18 @@ class BaseAsyncMemory:
             self.memory[user_id] = {}
 
         extracted_info = await self._extract_information(message)
+        await self._update_user_memory(user_id, extracted_info)
+        return self.memory[user_id]
 
+    async def batch_update_memory(self, user_id: str, messages: List[Dict[str, str]]) -> Dict:
+        if user_id not in self.memory:
+            self.memory[user_id] = {}
+
+        extracted_info = await self._extract_batch_information(messages)
+        await self._update_user_memory(user_id, extracted_info)
+        return self.memory[user_id]
+
+    async def _update_user_memory(self, user_id: str, extracted_info: Dict[str, str]):
         for key, value in extracted_info.items():
             existing_key = await self._find_relevant_key(user_id, key)
             if existing_key:
@@ -77,7 +88,6 @@ class BaseAsyncMemory:
                 self.memory[user_id]["beliefs"] = new_beliefs
 
         await self._save_memory()
-        return self.memory[user_id]
 
     async def _find_relevant_key(self, user_id: str, new_key: str) -> Optional[str]:
         existing_keys = ", ".join(self.memory[user_id].keys())
@@ -166,6 +176,36 @@ class BaseAsyncMemory:
 
         return extracted_info
 
+    async def _extract_batch_information(self, messages: List[Dict[str, str]]) -> Dict[str, str]:
+        system_prompt = """
+            You are an AI assistant that extracts relevant personal information from conversations between humans and AI agents.
+            Extract relevant personal information from the following conversation only related to the human user. 
+            Focus on key details such as location, preferences, important events, or any other significant personal information.
+            Ignore irrelevant or redundant information. Try to keep all relevant information under the same key. Less is more.
+    
+            Guidelines:
+            1. Only extract information about the user, not the AI assistant.
+            2. Prioritize new or updated information over repeated information.
+            3. Combine related information under a single key when possible.
+            4. Ignore pleasantries, small talk, or information not directly related to the user.
+            5. If conflicting information is provided, use the most recent or most specific information.
+    
+            Return the extracted information as a JSON object with appropriate keys (lower case) and values.
+            Do not use any specific format (like ```json), just provide the extracted information as a JSON.
+            Remember that the memory could be very long so try to keep values concise and short with no explanations.
+            """
+
+        prompt = ChatPromptTemplate.from_messages([
+            ("system", system_prompt),
+            ("human", "Conversation:\n{conversation}"),
+        ])
+
+        conversation = "\n".join([f"{msg['role']}: {msg['content']}" for msg in messages])
+        chain = prompt | self.llm | JsonOutputParser()
+        extracted_info = await chain.ainvoke({"conversation": conversation})
+
+        return extracted_info
+
     async def _generate_new_beliefs(self, user_id: str):
         example_prompt = PromptTemplate.from_template(
             """
@@ -209,7 +249,7 @@ class BaseAsyncMemory:
         beliefs = await chain.ainvoke(
             {
                 "business_description": self.business_description,
-                "memories": await self._get_memory(user_id),
+                "memories": await self.get_memory(user_id),
                 "beliefs": self.memory.get("beliefs"),
             }
         )
@@ -267,6 +307,9 @@ class SyncMemory(BaseAsyncMemory):
     def update_memory(self, user_id: str, message: str) -> Dict:
         return asyncio.run((super().update_memory(user_id, message)))
 
+    def batch_update_memory(self, user_id: str, messages: List[Dict[str, str]]) -> Dict:
+        return asyncio.run(super().batch_update_memory(user_id, messages))
+
     def get_beliefs(self, user_id: str) -> Optional[str]:
         return asyncio.run(super().get_beliefs(user_id))
 
@@ -304,11 +347,14 @@ class AsyncMemoryManager(BaseMemoryManager):
 
     async def get_memory(self, user_id: str) -> str:
         return (
-            await self.memory._get_memory(user_id) or "No memory found for this user."
+                await self.memory.get_memory(user_id) or "No memory found for this user."
         )
 
     async def update_memory(self, user_id: str, message: str):
         await self.memory.update_memory(user_id, message)
+
+    async def batch_update_memory(self, user_id: str, messages: List[Dict[str, str]]):
+        await self.memory.batch_update_memory(user_id, messages)
 
     async def delete_memory(self, user_id: str) -> bool:
         return await self.memory.delete_memory(user_id)
@@ -333,12 +379,15 @@ class MemoryManager(BaseMemoryManager):
 
     def get_memory(self, user_id: str) -> str:
         return (
-            asyncio.run(self.memory._get_memory(user_id))
+            asyncio.run(self.memory.get_memory(user_id))
             or "No memory found for this user."
         )
 
     def update_memory(self, user_id: str, message: str):
         self.memory.update_memory(user_id, message)
+
+    def batch_update_memory(self, user_id: str, messages: List[Dict[str, str]]):
+        self.memory.batch_update_memory(user_id, messages)
 
     def delete_memory(self, user_id: str) -> bool:
         return self.memory.delete_memory(user_id)

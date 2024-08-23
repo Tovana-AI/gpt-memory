@@ -96,13 +96,40 @@ Tovana introduces a new approach to LLM reasoning: actionable beliefs generated 
 
 ## 🛠️ API Reference
 
-### AIMemoryManager
+### MemoryManager
 
 - `get_memory(user_id: str) -> JSON`: Fetch user memory
 - `delete_memory(user_id: str) -> bool`: Delete user memory
 - `update_memory(user_id: str, message: str) -> JSON`: Update memory with relevant information if found in message
+- `batch_update_memory(user_id: str, messages: List[Dict[str, str]]) -> JSON`: Update memory with relevant information if found in message
 - `get_memory_context(user_id: str, message: Optiona[str]) -> str`: Get formatted memory context, general or message specific
 - `get_beliefs(user_id: str) -> str`: Get actionable beliefs context
+
+### Batch Update Memory
+Traditional per-message memory updates can be costly and inefficient, especially in longer conversations. They often miss crucial context, leading to suboptimal information retrieval. 
+
+Our batch memory update method addresses these challenges by processing entire conversations at once. This approach not only improves performance and reduces costs but also enhances the quality of extracted information. This results in a more coherent and accurate user memory, ultimately leading to better AI reasoning.
+
+#### Example
+
+```python
+user_id = "user123"
+messages = [
+    {"role": "user", "content": "Hi, I'm planning a trip to Japan."},
+    {"role": "assistant", "content": "That's exciting! When are you planning to go?"},
+    {"role": "user", "content": "I'm thinking about next spring. I love sushi and technology."}
+]
+
+await memory_manager.batch_update_memory(user_id, messages)
+```
+
+### Sync vs Async Updates
+Tovana provides both synchronous and asynchronous update methods to cater to different use cases and application architectures:
+
+1. **Asynchronous Updates (`AsyncMemoryManager`)**: Ideal for applications built on asynchronous frameworks like FastAPI or asynchronous Python scripts. This allows for non-blocking memory updates, improving overall application performance, especially when dealing with I/O-bound operations or high-concurrency scenarios.
+2. **Synchronous Updates (`MemoryManager`)**: Suitable for traditional synchronous applications or when you need to ensure that memory updates are completed before proceeding with other operations. This can be useful in scripts or applications where the order of operations is critical.
+
+By providing both options, our library offers flexibility, allowing to choose the most appropriate method based on your specific application requirements and architecture.
 
 ## 🤝 Contributing
 

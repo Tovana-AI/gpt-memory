@@ -73,8 +73,7 @@ print(context)  # Output: 'User Memory:\n location: Paris,\n previous_location: 
 
 # Get beliefs
 beliefs = memory_manager.get_beliefs(user_id=user_id)
-print(
-  beliefs)  # Output: {"beliefs": "- Suggest spending time with Charlie and Luna when user is feeling down\n- Suggest family activities with Lisa and Mai for emotional well-being\n- Recommend playing basketball for physical exercise and stress relief"}
+print(beliefs)  # Output: {"beliefs": "- Suggest spending time with Charlie and Luna when user is feeling down\n- Suggest family activities with Lisa and Mai for emotional well-being\n- Recommend playing basketball for physical exercise and stress relief"}
 ```
 
 ## 🧠 Belief Generation: The Secret Sauce

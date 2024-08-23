@@ -1,6 +1,6 @@
 # 🧠 Tovana - Agent Memory Library
 
-> Memory-Driven Reasoning for Smarter AI Agents
+> Memory Driven Reasoning for Smarter AI Agents
 
 Tovana is a library that introduces a new approach to improving LLM reasoning through actionable insights (beliefs) learned over time from memory. Supercharge your AI agents with personalized, context-aware responses.
 

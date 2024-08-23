@@ -4,7 +4,7 @@ import time
 import uuid
 from typing import List
 
-from memory import AsyncMemoryManager
+from tovana import AsyncMemoryManager
 
 
 async def update_user_memory(

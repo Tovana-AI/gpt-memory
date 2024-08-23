@@ -10,7 +10,7 @@ from langchain_core.output_parsers import JsonOutputParser, StrOutputParser
 from langchain_core.prompts import (ChatPromptTemplate, FewShotPromptTemplate,
                                     PromptTemplate)
 
-from memory.llms.llms import GenericLLMProvider
+from .llms.llms import GenericLLMProvider
 
 MAX_KEY_LENGTH = 17
 

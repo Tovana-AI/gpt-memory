@@ -12,10 +12,10 @@ with open("requirements.txt", "r") as f:
 
 setup(
     name="tovana",
-    version="0.0.2",
+    version="0.0.6",
     description="Memory management library to enhance AI agents with smarter, personalized, context-aware responses",
+    packages=["tovana"] + ["tovana." + pkg for pkg in find_packages("memory")],
     package_dir={"tovana": "memory"},
-    packages=find_packages(exclude=exclude_packages),
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/assafelovic/tovana",

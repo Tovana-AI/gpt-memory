@@ -3,7 +3,7 @@ import os
 import time
 import uuid
 
-from memory.memory import MemoryManager
+from tovana import MemoryManager
 
 user_id = str(uuid.uuid4())
 # Initialize the memory manager with your OpenAI API key

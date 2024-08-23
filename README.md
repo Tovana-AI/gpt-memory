@@ -24,18 +24,18 @@ By simulating human-like memory processes, GPT Memory enables more personalized,
 
 | Feature                          | Status      | Description                                                                                 |
 |----------------------------------|-------------|---------------------------------------------------------------------------------------------|
-| 🧠 Human-like Memory             | ✅ Available | Transform interactions into lasting memories and actionable beliefs                         |
-| 🔍 Smart Information Extraction  | ✅ Available | Automatically capture and store relevant user details from conversations                    |
-| 💡 Dynamic Belief Generation     | ✅ Available | Create personalized, context-aware insights to guide AI responses                           |
-| 🤖 LLM-Friendly Context          | ✅ Available | Seamlessly integrate memory and beliefs into your AI's decision-making process              |
-| 🔌 Easy Integration              | ✅ Available | Plug into your AI applications with a straightforward API                                   |
-| 🎭 Conflict Resolution           | ✅ Available | Intelligently handle contradictions in user information                                     |
-| 🌐 Flexible Architecture         | ✅ Available | Designed to work with various LLM providers and models                                      |
-| 📊 Memory Management             | ✅ Available | Process events, store short-term and long-term memories, and manage beliefs                 |
-| 🔗 Advanced Association Creation | ✅ Available | Form connections between memories and beliefs for more nuanced understanding                |
-| 🧵 Async Functionality           | ✅ Available | Support for asynchronous operations to enhance performance in concurrent environments       |
-| ⛁ Persistent Database Support    | 🔜 Coming Soon | Integration with persistent databases for long-term storage and retrieval of memory data    |
-| 🎛️ Custom Belief Generation     | 🔜 Coming Soon | User-generated beliefs offering end-to-end flexibility in shaping the belief system reasoning|
+| 🧠 Human-like Memory             | ✅ | Transform interactions into lasting memories and actionable beliefs                         |
+| 🔍 Smart Information Extraction  | ✅ | Automatically capture and store relevant user details from conversations                    |
+| 💡 Dynamic Belief Generation     | ✅ | Create personalized, context-aware insights to guide AI responses                           |
+| 🤖 LLM-Friendly Context          | ✅ | Seamlessly integrate memory and beliefs into your AI's decision-making process              |
+| 🔌 Easy Integration              | ✅ | Plug into your AI applications with a straightforward API                                   |
+| 🎭 Conflict Resolution           | ✅ | Intelligently handle contradictions in user information                                     |
+| 🌐 Flexible Architecture         | ✅ | Designed to work with various LLM providers and models                                      |
+| 📊 Memory Management             | ✅ | Process events, store short-term and long-term memories, and manage beliefs                 |
+| 🔗 Advanced Association Creation | ✅ | Form connections between memories and beliefs for more nuanced understanding                |
+| 🧵 Async Functionality           | ✅ | Support for asynchronous operations to enhance performance in concurrent environments       |
+| ⛁ Persistent Database Support    | 🔜 | Integration with persistent databases for long-term storage and retrieval of memory data    |
+| 🎛️ Custom Belief Generation     | 🔜 | User-generated beliefs offering end-to-end flexibility in shaping the belief system reasoning|
 
 ## 🏗️ Architecture
 <img width="663" alt="Screenshot 2024-08-21 at 9 04 07" src="https://github.com/user-attachments/assets/2bdfdaa8-e91c-45b0-b200-2e567daadc5d">

@@ -234,8 +234,9 @@ class BaseAsyncMemory:
             examples=examples,
             example_prompt=example_prompt,
             prefix="""
-                    You are an AI assistant that extracts relevant actionable insights based on memory about the user and their business description
-                    Given a business description, memories, and existing belief context, generate new actionable beliefs if necessary. 
+                    You are an AI assistant that extracts relevant actionable insights (beliefs) based on memory about the user and their business description
+                    Beliefs are actionable insights that can be used by the AI to provide better assistance related to its business description and goal.
+                    Given a business description, memories, and existing belief context, generate new beliefs only if necessary. 
                     If no new beliefs are found, return 'None'""",
             suffix="""
                     Do not use any specific format (like ```json), just provide the extracted information as a JSON.

@@ -14,7 +14,7 @@ Tovana is a library that introduces a new approach to improving LLM reasoning th
 
 ## Why Tovana?
 
-Current LLMs face significant limitations in their ability to learn and adapt from user-specific interactions over time. While LLMs excel at processing vast amounts of pre-trained data, they struggle with ongoing personalization and context-aware learning. This gap restricts their ability to provide truly adaptive and evolving AI experiences.
+Current LLMs face significant limitations in their ability to learn and adapt from user-specific interactions over time. While LLMs excel at processing vast amounts of data, they struggle with ongoing personalization and context-aware learning. This gap restricts their ability to provide truly adaptive and evolving AI experiences.
 
 Tovana aims to address these challenges by providing a comprehensive memory and belief management framework for AI agents. Its core concept revolves around converting experiences (events) into memories, which in turn shape beliefs. These beliefs then influence the agent's reasoning, responses, and actions.
 

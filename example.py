@@ -2,11 +2,11 @@ import json
 import os
 import uuid
 
-from gptmem import GPTMemoryManager
+from memory import MemoryManager
 
 user_id = str(uuid.uuid4())
 # Initialize the memory manager with your OpenAI API key
-memory_manager = GPTMemoryManager(
+memory_manager = MemoryManager(
     api_key=os.environ["OPENAI_API_KEY"],
     provider="openai",
     temperature=0,

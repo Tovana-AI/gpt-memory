@@ -2,9 +2,9 @@ import json
 import os
 import uuid
 
-from gptmem import GPTMemoryManager
+from memory import MemoryManager
 
-memory_manager = GPTMemoryManager(
+memory_manager = MemoryManager(
     api_key=os.environ["OPENAI_API_KEY"],
     business_description="A personal therapist",
     include_beliefs=True,

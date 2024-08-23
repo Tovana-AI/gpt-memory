@@ -4,9 +4,9 @@ import uuid
 
 import pytest
 
-from gptmem import GPTMemoryManager
+from memory import MemoryManager
 
-memory_manager = GPTMemoryManager(
+memory_manager = MemoryManager(
     api_key=os.environ["OPENAI_API_KEY"],
     provider="openai",
     business_description="A personal therapist",

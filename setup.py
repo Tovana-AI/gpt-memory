@@ -11,10 +11,10 @@ with open("requirements.txt", "r") as f:
     ]
 
 setup(
-    name="gptmem",
+    name="memory",
     version="0.0.2",
     description="Memory management system to enhance AI agents with personalized, context-aware responses",
-    package_dir={"gptmem": "gptmem"},
+    package_dir={"memory": "memory"},
     packages=find_packages(exclude=exclude_packages),
     long_description=long_description,
     long_description_content_type="text/markdown",

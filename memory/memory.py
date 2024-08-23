@@ -11,12 +11,12 @@ from langchain_core.prompts import (
     PromptTemplate,
 )
 
-from gptmem.llms.llms import GenericLLMProvider
+from memory.llms.llms import GenericLLMProvider
 
 MAX_KEY_LENGTH = 17
 
 
-class GPTMemory:
+class Memory:
     def __init__(
         self,
         api_key: str,
@@ -264,7 +264,7 @@ class GPTMemory:
         return "No memory found for this user."
 
 
-class GPTMemoryManager:
+class MemoryManager:
     def __init__(
         self,
         api_key: str,
@@ -278,7 +278,7 @@ class GPTMemoryManager:
             provider=provider, api_key=api_key, **kwargs
         ).llm
 
-        self.memory = GPTMemory(
+        self.memory = Memory(
             api_key=api_key,  # TODO remove
             llm=llm,
             business_description=business_description,

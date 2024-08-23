@@ -45,13 +45,15 @@ pip install tovana
 ```
 
 2. Use it in your project:
+
 ```python
-from gptmem import GPTMemoryManager
+from tovana import MemoryManager
 
 business_description = "an AI therapist"
 
 # Initialize with your preferred LLM provider and API key (Refer to the documentation for specific models)
-memory_manager = GPTMemoryManager(api_key="your-llm-provider-api-key-here",provider="anthropic", business_description=business_description, include_beliefs=True)
+memory_manager = MemoryManager(api_key="your-llm-provider-api-key-here", provider="anthropic",
+                               business_description=business_description, include_beliefs=True)
 
 # Update user memory
 memory_manager.update_user_memory("user123", "I just moved from New York to Paris for work.")
@@ -66,7 +68,8 @@ print(context)  # Output: 'User Memory:\n location: Paris,\n previous_location: 
 
 # Get beliefs
 beliefs = memory_manager.get_beliefs("user123")
-print(beliefs)  # Output: {"beliefs": "- Suggest spending time with Charlie and Luna when user is feeling down\n- Suggest family activities with Lisa and Mai for emotional well-being\n- Recommend playing basketball for physical exercise and stress relief"}
+print(
+  beliefs)  # Output: {"beliefs": "- Suggest spending time with Charlie and Luna when user is feeling down\n- Suggest family activities with Lisa and Mai for emotional well-being\n- Recommend playing basketball for physical exercise and stress relief"}
 ```
 
 ## 🧠 Belief Generation: The Secret Sauce

@@ -99,6 +99,7 @@ Tovana introduces a new approach to LLM reasoning: actionable beliefs generated 
 ### AIMemoryManager
 
 - `get_memory(user_id: str) -> JSON`: Fetch user memory
+- `delete_memory(user_id: str) -> bool`: Delete user memory
 - `update_memory(user_id: str, message: str) -> JSON`: Update memory with relevant information if found in message
 - `get_memory_context(user_id: str, message: Optiona[str]) -> str`: Get formatted memory context, general or message specific
 - `get_beliefs(user_id: str) -> str`: Get actionable beliefs context

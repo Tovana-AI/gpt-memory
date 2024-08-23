@@ -54,12 +54,12 @@ pip install tovana
 ```python
 from tovana import MemoryManager
 
-business_description = "an AI therapist"
+business_description = "a commerce shopping assistant"
 message = "I just moved from New York to Paris for work."
 user_id = "user123"
 
 # Initialize with your preferred LLM provider and API key (Refer to the documentation for specific models)
-memory_manager = MemoryManager(api_key="your-llm-provider-api-key-here", provider="anthropic",
+memory_manager = MemoryManager(api_key="your-llm-provider-api-key-here", provider="openai",
                                business_description=business_description, include_beliefs=True)
 
 # Update user memory
@@ -75,7 +75,7 @@ print(context)  # Output: 'User Memory:\n location: Paris,\n previous_location: 
 
 # Get beliefs
 beliefs = memory_manager.get_beliefs(user_id=user_id)
-print(beliefs)  # Output: {"beliefs": "- Suggest spending time with Charlie and Luna when user is feeling down\n- Suggest family activities with Lisa and Mai for emotional well-being\n- Recommend playing basketball for physical exercise and stress relief"}
+print(beliefs)  # Output: {"beliefs": "- Provide recommendations for products shipping to Paris"}
 ```
 
 ## 🧠 Belief Generation

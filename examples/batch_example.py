@@ -9,7 +9,7 @@ user_id = str(uuid.uuid4())
 memory_manager = MemoryManager(
     api_key=os.environ["OPENAI_API_KEY"],
     provider="openai",
-    temperature=0,
+    temperature=0.2,
     business_description="A personal travel assistant",
     include_beliefs=True,
 )

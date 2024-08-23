@@ -236,8 +236,12 @@ class BaseAsyncMemory:
             prefix="""
                     You are an AI assistant that extracts relevant actionable insights (beliefs) based on memory about the user and their business description
                     Beliefs are actionable insights that can be used by the AI to provide better assistance and reasoning related to their business description and goals.
+                    
                     Given a business description, memories, and existing belief context, generate new beliefs only if necessary. 
-                    If no new beliefs are found, return 'None'""",
+                    If no new beliefs are found, return the current beliefs as they are.
+                    If some beliefs are found, add them to the existing beliefs.
+                    If some beliefs conflict with existing beliefs, resolve the conflict by keeping the most relevant belief.
+                    """,
             suffix="""
                     Do not use any specific format (like ```json), just provide the extracted information as a JSON.
                     Input - business_description: {business_description}, memories: {memories}, beliefs: {beliefs}

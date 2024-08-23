@@ -1,6 +1,6 @@
 [tool.poetry]
-name = "gptmem"
-version = "0.0.2"
+name = "tovana"
+version = "0.0.8"
 description = "Memory management system to enhance AI agents with personalized, context-aware responses"
 authors = ["Assaf Elovic <assaf.elovic@gmail.com>", "Eden Marco <emarco177@gmail.com>"]
 exclude = [

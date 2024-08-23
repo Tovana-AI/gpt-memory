@@ -2,7 +2,7 @@
 
 > Memory Driven Reasoning for Smarter AI Agents
 
-Tovana is a library that introduces a new approach to improving LLM reasoning through actionable insights (beliefs) learned over time from memory. Supercharge your AI agents with personalized, context-aware responses.
+Tovana is a library that introduces a new approach to improving LLM reasoning through actionable insights (beliefs) learned over time from continous interactions and long term memory. Supercharge your AI agents with personalized, context-aware responses.
 
 [![PyPI version](https://badge.fury.io/py/gpt-memory.svg)](https://badge.fury.io/py/gptmem)
 [![License: Apache 2](https://img.shields.io/badge/License-Apache-yellow.svg)](https://opensource.org/license/apache-2-0)

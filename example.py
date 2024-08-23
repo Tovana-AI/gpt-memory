@@ -2,11 +2,11 @@ import json
 import os
 import uuid
 
-from memory import MemoryManager
+from memory import SyncMemoryManager
 
 user_id = str(uuid.uuid4())
 # Initialize the memory manager with your OpenAI API key
-memory_manager = MemoryManager(
+memory_manager = SyncMemoryManager(
     api_key=os.environ["OPENAI_API_KEY"],
     provider="openai",
     temperature=0,

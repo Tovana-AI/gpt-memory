@@ -34,20 +34,21 @@ pip install tovana
 from tovana import MemoryManager
 
 business_description = "a commerce shopping assistant"
-message = "I just moved from New York to Paris for work."
-user_id = "user123"
 
 # Initialize with your preferred LLM provider and API key (Refer to the documentation for specific models)
 memory_manager = MemoryManager(api_key="provider-api-key",
                                provider="openai",
                                business_description=business_description,
                                include_beliefs=True)
+```
+
+3. Manage your LLMs memory with ongoing interaction messages
+```python
+user_id = "user123"
+message = "I just moved from New York to Paris for work."
 
 # Update user memory
 memory_manager.update_user_memory(user_id=user_id, message=message)
-
-# Get user memory
-user_memory = memory_manager.get_user_memory(user_id=user_id)
 print(user_memory)  # Output: {'location': 'Paris', 'previous_location': 'New York'}
 
 # Get memory context for LLM

@@ -53,24 +53,26 @@ pip install tovana
 from tovana import MemoryManager
 
 business_description = "an AI therapist"
+message = "I just moved from New York to Paris for work."
+user_id = "user123"
 
 # Initialize with your preferred LLM provider and API key (Refer to the documentation for specific models)
 memory_manager = MemoryManager(api_key="your-llm-provider-api-key-here", provider="anthropic",
                                business_description=business_description, include_beliefs=True)
 
 # Update user memory
-memory_manager.update_user_memory("user123", "I just moved from New York to Paris for work.")
+memory_manager.update_user_memory(user_id=user_id, message=message)
 
 # Get user memory
-user_memory = memory_manager.get_user_memory("user123")
+user_memory = memory_manager.get_user_memory(user_id=user_id)
 print(user_memory)  # Output: {'location': 'Paris', 'previous_location': 'New York'}
 
 # Get memory context for LLM
-context = memory_manager.get_memory_context("user123")
+context = memory_manager.get_memory_context(user_id=user_id)
 print(context)  # Output: 'User Memory:\n location: Paris,\n previous_location: New York'
 
 # Get beliefs
-beliefs = memory_manager.get_beliefs("user123")
+beliefs = memory_manager.get_beliefs(user_id=user_id)
 print(
   beliefs)  # Output: {"beliefs": "- Suggest spending time with Charlie and Luna when user is feeling down\n- Suggest family activities with Lisa and Mai for emotional well-being\n- Recommend playing basketball for physical exercise and stress relief"}
 ```

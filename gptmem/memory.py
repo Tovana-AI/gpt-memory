@@ -1,10 +1,8 @@
 import json
-import logging
 import os
 from datetime import datetime
 from typing import Dict, Optional
 
-import openai
 from langchain_core.language_models import BaseChatModel
 from langchain_core.output_parsers import JsonOutputParser, StrOutputParser
 from langchain_core.prompts import (
@@ -183,6 +181,7 @@ class GPTMemory:
     def generate_new_beliefs(self, user_id: str):
         example_prompt = PromptTemplate.from_template(
             """
+            Examples that will help you generate an amazing answer
             Input - {input}
             Output (JSON) - {output} 
             """,
@@ -275,7 +274,9 @@ class GPTMemoryManager:
         **kwargs,
     ):
         # initialize model
-        llm = GenericLLMProvider.from_provider(provider=provider, **kwargs).llm
+        llm = GenericLLMProvider.from_provider(
+            provider=provider, api_key=api_key, **kwargs
+        ).llm
 
         self.memory = GPTMemory(
             api_key=api_key,  # TODO remove

@@ -20,13 +20,15 @@ The proposed AI agent memory system is designed to augment human memory and enha
 The system is a comprehensive memory and belief management framework for AI agents. It includes components for processing events, storing short-term and long-term memories, managing beliefs, creating associations, and informing decision-making processes. **The core concept revolves around converting experiences (events) into memories, which in turn shape beliefs.** These beliefs then influence the agent's reasoning, responses, and actions.
 
 ## 🌟 Features
-- 🧠 Supercharge AI with Human like Memory: Transform interactions into lasting memories and beliefs
-- 🔍 Smart Information Extraction: Automatically capture and store relevant user details
-- 💡 Belief Generation: Create actionable insights to guide personalized AI responses
-- 🤖 LLM Friendly Context Generation: Easily integrate memory and beliefs into your AI's decision-making
-- 🔌 Simple Integration: Plug into your AI applications with our straightforward API
-- 🎭 Conflict Resolution: Smartly handle contradictions in user information
-- 🌐 Adaptable Architecture: Designed to work with various LLM providers and models
+- 🧠 Human-like Memory: Transform interactions into lasting memories and actionable beliefs
+- 🔍 Smart Information Extraction: Automatically capture and store relevant user details from conversations
+- 💡 Dynamic Belief Generation: Create personalized, context-aware insights to guide AI responses
+- 🤖 LLM-Friendly Context: Seamlessly integrate memory and beliefs into your AI's decision-making process
+- 🔌 Easy Integration: Plug into your AI applications with a straightforward API
+- 🎭 Conflict Resolution: Intelligently handle contradictions in user information
+- 🌐 Flexible Architecture: Designed to work with various LLM providers and models
+- 📊 Memory Management: Process events, store short-term and long-term memories, and manage beliefs 
+- 🔗 Advanced Association Creation: Form connections between memories and beliefs for more nuanced understanding
 
 ## 🏗️ Architecture
 <img width="663" alt="Screenshot 2024-08-21 at 9 04 07" src="https://github.com/user-attachments/assets/2bdfdaa8-e91c-45b0-b200-2e567daadc5d">

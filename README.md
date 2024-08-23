@@ -13,35 +13,6 @@ GPT Memory is a library powered by Tovana that introduces a new approach to impr
 [![License: Apache 2](https://img.shields.io/badge/License-Apache-yellow.svg)](https://opensource.org/license/apache-2-0)
 </div>
 
-## Why GPT Memory?
-
-Current LLMs face significant limitations in their ability to learn and adapt from user-specific interactions over time. While LLMs excel at processing vast amounts of data, they struggle with ongoing personalization and context-aware learning. This gap restricts their ability to provide truly adaptive and evolving AI experiences.
-
-Our Memory manager aims to address these challenges by providing a comprehensive memory and belief management framework for AI agents. Its core concept revolves around converting experiences (events) into memories, which in turn shape beliefs. These beliefs then influence the agent's reasoning, responses, and actions.
-
-By simulating human-like memory processes, GPT Memory enables more personalized, adaptive, and context-aware AI interactions. This framework bridges the gap between static knowledge bases and dynamic, experience-based learning, allowing AI agents to evolve their understanding and behavior over time.
-## 🌟 Features
-
-| Feature                          | Status      | Description                                                                                 |
-|----------------------------------|-------------|---------------------------------------------------------------------------------------------|
-| 🧠 Human-like Memory             | ✅ | Transform interactions into lasting memories and actionable beliefs                         |
-| 🔍 Smart Information Extraction  | ✅ | Automatically capture and store relevant user details from conversations                    |
-| 💡 Dynamic Belief Generation     | ✅ | Create personalized, context-aware insights to guide AI responses                           |
-| 🤖 LLM-Friendly Context          | ✅ | Seamlessly integrate memory and beliefs into your AI's decision-making process              |
-| 🔌 Easy Integration              | ✅ | Plug into your AI applications with a straightforward API                                   |
-| 🎭 Conflict Resolution           | ✅ | Intelligently handle contradictions in user information                                     |
-| 🌐 Flexible Architecture         | ✅ | Designed to work with various LLM providers and models                                      |
-| 📊 Memory Management             | ✅ | Process events, store short-term and long-term memories, and manage beliefs                 |
-| 🔗 Advanced Association Creation | ✅ | Form connections between memories and beliefs for more nuanced understanding                |
-| 🧵 Async Functionality           | ✅ | Support for asynchronous operations to enhance performance in concurrent environments       |
-| ⛁ Persistent Database Support    | 🔜 | Integration with persistent databases for long-term storage and retrieval of memory data    |
-| 🎛️ Custom Belief Generation     | 🔜 | User-generated beliefs offering end-to-end flexibility in shaping the belief system reasoning|
-
-## 🏗️ Architecture
-<img width="663" alt="Screenshot 2024-08-21 at 9 04 07" src="https://github.com/user-attachments/assets/2bdfdaa8-e91c-45b0-b200-2e567daadc5d">
-
-
-
 ## 🚀 Quick Start
 
 1. Install Tovana:
@@ -78,6 +49,17 @@ beliefs = memory_manager.get_beliefs(user_id=user_id)
 print(beliefs)  # Output: {"beliefs": "- Provide recommendations for products shipping to Paris"}
 ```
 
+## 🤔 Why GPT Memory?
+
+Current LLMs face significant limitations in their ability to learn and adapt from user-specific interactions over time. While LLMs excel at processing vast amounts of data, they struggle with ongoing personalization and context-aware learning. This gap restricts their ability to provide truly adaptive and evolving AI experiences.
+
+Our Memory manager aims to address these challenges by providing a comprehensive memory and belief management framework for AI agents. Its core concept revolves around converting experiences (events) into memories, which in turn shape beliefs. These beliefs then influence the agent's reasoning, responses, and actions.
+
+By simulating human-like memory processes, GPT Memory enables more personalized, adaptive, and context-aware AI interactions. This framework bridges the gap between static knowledge bases and dynamic, experience-based learning, allowing AI agents to evolve their understanding and behavior over time.
+
+## 🏗️ Architecture
+<img width="663" alt="Screenshot 2024-08-21 at 9 04 07" src="https://github.com/user-attachments/assets/2bdfdaa8-e91c-45b0-b200-2e567daadc5d">
+
 ## 🧠 Belief Generation
 
 GPT memory introduces a new approach to LLM reasoning: actionable beliefs generated from user memory. These beliefs provide personalized insights that can significantly enhance your agent's planning, reasoning and responses.
@@ -101,6 +83,23 @@ GPT memory introduces a new approach to LLM reasoning: actionable beliefs genera
 ```json
 {"beliefs": ",- Suggest mediation at 9:30pm\n- Suggest spending time with Charlie and Luna for emotional well-being"}
 ```
+
+## 🌟 Features
+
+| Feature                          | Status      | Description                                                                                 |
+|----------------------------------|-------------|---------------------------------------------------------------------------------------------|
+| 🧠 Human-like Memory             | ✅ | Transform interactions into lasting memories and actionable beliefs                         |
+| 🔍 Smart Information Extraction  | ✅ | Automatically capture and store relevant user details from conversations                    |
+| 💡 Dynamic Belief Generation     | ✅ | Create personalized, context-aware insights to guide AI responses                           |
+| 🤖 LLM-Friendly Context          | ✅ | Seamlessly integrate memory and beliefs into your AI's decision-making process              |
+| 🔌 Easy Integration              | ✅ | Plug into your AI applications with a straightforward API                                   |
+| 🎭 Conflict Resolution           | ✅ | Intelligently handle contradictions in user information                                     |
+| 🌐 Flexible Architecture         | ✅ | Designed to work with various LLM providers and models                                      |
+| 📊 Memory Management             | ✅ | Process events, store short-term and long-term memories, and manage beliefs                 |
+| 🔗 Advanced Association Creation | ✅ | Form connections between memories and beliefs for more nuanced understanding                |
+| 🧵 Async Functionality           | ✅ | Support for asynchronous operations to enhance performance in concurrent environments       |
+| ⛁ Persistent Database Support    | 🔜 | Integration with persistent databases for long-term storage and retrieval of memory data    |
+| 🎛️ Custom Belief Generation     | 🔜 | User-generated beliefs offering end-to-end flexibility in shaping the belief system reasoning|
 
 ## 🛠️ API Reference
 

@@ -42,7 +42,7 @@ memory_manager = MemoryManager(api_key="provider-api-key",
                                include_beliefs=True)
 ```
 
-3. Manage your LLMs memory with ongoing interaction messages
+3. Manage your LLMs memory with ongoing user conversation messages:
 ```python
 user_id = "user123"
 message = "I just moved from New York to Paris for work."

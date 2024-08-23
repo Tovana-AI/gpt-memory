@@ -20,22 +20,13 @@ The proposed AI agent memory system is designed to augment human memory and enha
 The system is a comprehensive memory and belief management framework for AI agents. It includes components for processing events, storing short-term and long-term memories, managing beliefs, creating associations, and informing decision-making processes. **The core concept revolves around converting experiences (events) into memories, which in turn shape beliefs.** These beliefs then influence the agent's reasoning, responses, and actions.
 
 ## 🌟 Features
-
-- Memory Management
-  - Extract and store relevant information from user messages
-  - Retrieve stored memory for a specific user
-  - Generate formatted memory context for LLM input
-- Belief Generation
-  - Create actionable insights based on user memory and business context
-  - Beliefs are AI-generated suggestions that help guide LLM responses, improving personalization and relevance
-- Smart Data Handling
-  - Automatic deduplication of information
-  - Intelligent updating of existing data (e.g., location changes)
-  - Conflict resolution between new and existing information
-- Simple API
-  - Easy-to-use methods for integrating memory and belief functionality into your AI applications
-- Persistent Storage
-  - Automatic saving and loading of user memory in JSON format
+- 🧠 Supercharge AI with Human like Memory: Transform interactions into lasting memories and beliefs
+- 🔍 Smart Information Extraction: Automatically capture and store relevant user details
+- 💡 Belief Generation: Create actionable insights to guide personalized AI responses
+- 🤖 LLM Friendly Context Generation: Easily integrate memory and beliefs into your AI's decision-making
+- 🔌 Simple Integration: Plug into your AI applications with our straightforward API
+- 🎭 Conflict Resolution: Smartly handle contradictions in user information
+- 🌐 Adaptable Architecture: Designed to work with various LLM providers and models
 
 ## 🏗️ Architecture
 <img width="663" alt="Screenshot 2024-08-21 at 9 04 07" src="https://github.com/user-attachments/assets/2bdfdaa8-e91c-45b0-b200-2e567daadc5d">

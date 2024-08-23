@@ -30,19 +30,19 @@ class Memory:
         self.memory_file = memory_file
         self.business_description = business_description
         self.include_beliefs = include_beliefs
-        self.memory = self.load_memory()
+        self.memory = self._load_memory()
 
-    def load_memory(self) -> Dict[str, Dict]:
+    def _load_memory(self) -> Dict[str, Dict]:
         if os.path.exists(self.memory_file):
             with open(self.memory_file, "r") as f:
                 return json.load(f)
         return {}
 
-    def save_memory(self):
+    def _save_memory(self):
         with open(self.memory_file, "w") as f:
             json.dump(self.memory, f, indent=2)
 
-    def get_memory(self, user_id: str) -> Optional[str]:
+    def _get_memory(self, user_id: str) -> Optional[str]:
         if user_id in self.memory:
             return json.dumps(self.memory[user_id], indent=2)
         return None
@@ -56,19 +56,15 @@ class Memory:
         if user_id not in self.memory:
             self.memory[user_id] = {}
 
-        # Extract relevant information from the message
-        extracted_info = self.extract_information(message)
+        extracted_info = self._extract_information(message)
 
-        # Update memory with extracted information
         for key, value in extracted_info.items():
-            existing_key = self.find_relevant_key(user_id, key)
+            existing_key = self._find_relevant_key(user_id, key)
             if existing_key:
                 if isinstance(self.memory[user_id].get(existing_key), list):
-                    # Append to the existing list
                     self.memory[user_id][existing_key].append(value)
                 else:
-                    # Resolve conflict and update the value
-                    new_value = self.resolve_conflict(
+                    new_value = self._resolve_conflict(
                         existing_key, self.memory[user_id].get(existing_key), value
                     )
                     self.memory[user_id][existing_key] = new_value
@@ -78,15 +74,14 @@ class Memory:
         self.memory[user_id]["last_updated"] = datetime.now().isoformat()
 
         if self.include_beliefs:
-            # Generate new beliefs based on the updated memory
-            new_beliefs = self.generate_new_beliefs(user_id)
+            new_beliefs = self._generate_new_beliefs(user_id)
             if new_beliefs:
                 self.memory[user_id]["beliefs"] = new_beliefs
 
-        self.save_memory()
+        self._save_memory()
         return self.memory[user_id]
 
-    def find_relevant_key(self, user_id: str, new_key: str) -> Optional[str]:
+    def _find_relevant_key(self, user_id: str, new_key: str) -> Optional[str]:
         existing_keys = ", ".join(self.memory[user_id].keys())
         template = """
                Find the most relevant existing key in the user's memory for the new information.
@@ -98,15 +93,10 @@ class Memory:
                Return only the existing key that is most relevant, or "None" if no relevant key exists.
                """
 
-        prompt = ChatPromptTemplate.from_messages(
-            [
-                (
-                    "system",
-                    "You are an AI assistant that finds relevant keys in user memory",
-                ),
-                ("human", template),
-            ]
-        )
+        prompt = ChatPromptTemplate.from_messages([
+            ("system", "You are an AI assistant that finds relevant keys in user memory"),
+            ("human", template),
+        ])
         chain = prompt | self.llm | StrOutputParser()
         relevant_key = chain.invoke(
             input={
@@ -116,13 +106,11 @@ class Memory:
             }
         )
         if relevant_key == "None" or len(relevant_key) > MAX_KEY_LENGTH:
-            # hack to not include cases with 'None' to be a key in memory
-            # or cases where model ignores instruction and adds reasoning as a key
             return None
 
         return relevant_key
 
-    def resolve_conflict(self, key: str, old_value: str, new_value: str) -> str:
+    def _resolve_conflict(self, key: str, old_value: str, new_value: str) -> str:
         template = """
                 Resolve the conflict between the old and new values for the following key in the user's memory:
 
@@ -136,15 +124,10 @@ class Memory:
                 Return the resolved value as a string. You must keep the value short and concise with no explanation.
                 """
 
-        prompt = ChatPromptTemplate.from_messages(
-            [
-                (
-                    "system",
-                    "You are an AI assistant that resolves conflicts in user memory updates",
-                ),
-                ("human", template),
-            ]
-        )
+        prompt = ChatPromptTemplate.from_messages([
+            ("system", "You are an AI assistant that resolves conflicts in user memory updates"),
+            ("human", template),
+        ])
         chain = prompt | self.llm | StrOutputParser()
         resolved_value = chain.invoke(
             input={"key": key, "old_value": old_value, "new_value": new_value}
@@ -152,7 +135,7 @@ class Memory:
 
         return resolved_value
 
-    def extract_information(self, message: str) -> Dict[str, str]:
+    def _extract_information(self, message: str) -> Dict[str, str]:
         system_prompt = """
           You are an AI assistant that extracts relevant personal information from messages
           Extract relevant personal information from the following message. 
@@ -164,21 +147,16 @@ class Memory:
           Remembers that the memory could be very long so try to keep values concise and short with no explanations.
           """
 
-        prompt = ChatPromptTemplate.from_messages(
-            [
-                (
-                    "system",
-                    system_prompt,
-                ),
-                ("human", "Message: {user_message}"),
-            ]
-        )
+        prompt = ChatPromptTemplate.from_messages([
+            ("system", system_prompt),
+            ("human", "Message: {user_message}"),
+        ])
         chain = prompt | self.llm | JsonOutputParser()
         extracted_info = chain.invoke({"user_message": message})
 
         return extracted_info
 
-    def generate_new_beliefs(self, user_id: str):
+    def _generate_new_beliefs(self, user_id: str):
         example_prompt = PromptTemplate.from_template(
             """
             Examples that will help you generate an amazing answer
@@ -208,7 +186,7 @@ class Memory:
             prefix="""
                     You are an AI assistant that extracts relevant actionable insights based on memory about the user and their business description
                     Given a business description, memories, and existing belief context, generate new actionable beliefs if necessary. 
-                                                                If no new beliefs are found, return 'None'""",
+                    If no new beliefs are found, return 'None'""",
             suffix="""
                     Do not use any specific format (like ```json), just provide the extracted information as a JSON.
                     Input - business_description: {business_description}, memories: {memories}, beliefs: {beliefs}
@@ -221,7 +199,7 @@ class Memory:
         beliefs = chain.invoke(
             {
                 "business_description": self.business_description,
-                "memories": self.get_memory(user_id),
+                "memories": self._get_memory(user_id),
                 "beliefs": self.memory.get("beliefs"),
             }
         )
@@ -239,20 +217,18 @@ class Memory:
                     context += f"{key}: {value}\n"
 
             if message:
-                prompt = ChatPromptTemplate.from_messages(
-                    [
-                        (
-                            "system",
-                            "You are an AI assistant that filters relevant information from user memory based on a given message."
-                            "Return only the relevant information from the user memory that relates to the message."
-                            "Provide the output in the same format as the input memory",
-                        ),
-                        (
-                            "human",
-                            "User Memory:\n{context}\n\nMessage: {message}\n\nUser Memory:",
-                        ),
-                    ]
-                )
+                prompt = ChatPromptTemplate.from_messages([
+                    (
+                        "system",
+                        "You are an AI assistant that filters relevant information from user memory based on a given message."
+                        "Return only the relevant information from the user memory that relates to the message."
+                        "Provide the output in the same format as the input memory",
+                    ),
+                    (
+                        "human",
+                        "User Memory:\n{context}\n\nMessage: {message}\n\nUser Memory:",
+                    ),
+                ])
 
                 chain = prompt | self.llm | StrOutputParser()
 
@@ -262,6 +238,13 @@ class Memory:
                 return filtered_context
             return context
         return "No memory found for this user."
+
+    def delete_memory(self, user_id: str) -> bool:
+        if user_id in self.memory:
+            del self.memory[user_id]
+            self._save_memory()
+            return True
+        return False
 
 
 class MemoryManager:
@@ -273,7 +256,6 @@ class MemoryManager:
         include_beliefs: bool = True,
         **kwargs,
     ):
-        # initialize model
         llm = GenericLLMProvider.from_provider(
             provider=provider, api_key=api_key, **kwargs
         ).llm
@@ -286,10 +268,13 @@ class MemoryManager:
         )
 
     def get_memory(self, user_id: str) -> str:
-        return self.memory.get_memory(user_id) or "No memory found for this user."
+        return self.memory._get_memory(user_id) or "No memory found for this user."
 
     def update_memory(self, user_id: str, message: str):
         self.memory.update_memory(user_id, message)
+
+    def delete_memory(self, user_id: str) -> bool:
+        return self.memory.delete_memory(user_id)
 
     def get_beliefs(self, user_id: str) -> str:
         return self.memory.get_beliefs(user_id) or None

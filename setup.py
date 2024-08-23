@@ -14,7 +14,7 @@ setup(
     name="tovana",
     version="0.0.1",
     description="Memory management library to enhance AI agents with smarter, personalized, context-aware responses",
-    package_dir={"memory": "tovana"},
+    package_dir={"tovana": "memory"},
     packages=find_packages(exclude=exclude_packages),
     long_description=long_description,
     long_description_content_type="text/markdown",

@@ -7,7 +7,7 @@ Tovana is a library that introduces a new approach to improving LLM reasoning th
 [![PyPI version](https://badge.fury.io/py/gpt-memory.svg)](https://badge.fury.io/py/gptmem)
 [![License: Apache 2](https://img.shields.io/badge/License-Apache-yellow.svg)](https://opensource.org/license/apache-2-0)
 
-## Why GPT Memory?
+## Why Tovana?
 Current AI memory systems face significant drawbacks that limit their ability to mimic human-like intelligence. These include their static nature (vector dbs / semantic search), lack of contextual understanding, inability to learn from experience or form beliefs, poor handling of contradictions, limited associative capabilities, and absence of emotional intelligence. Additionally, AI agents struggle with abstraction, lack meta-cognitive abilities, and don't have mechanisms for selectively retaining or forgetting information. These shortcomings collectively restrict AI agents' adaptability, decision-making, and ability to navigate complex, real-world scenarios effectively.
 
 The proposed AI agent memory system is designed to augment human memory and enhance AI agents' capabilities. Its purpose is to create more personalized, adaptive, and context-aware AI interactions by simulating human-like memory processes. This system aims to bridge the gap between static knowledge bases and dynamic, experience-based learning, allowing AI agents to evolve their understanding and behavior over time.

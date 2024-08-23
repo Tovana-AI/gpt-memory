@@ -35,6 +35,8 @@ The system is a comprehensive memory and belief management framework for AI agen
 | 🔗 Advanced Association Creation | ✅ Available | Form connections between memories and beliefs for more nuanced understanding                |
 | 🧵 Async Functionality           | ✅ Available | Support for asynchronous operations to enhance performance in concurrent environments       |
 | ⛁ Persistent Database Support    | 🔜 Coming Soon | Integration with persistent databases for long-term storage and retrieval of memory data    |
+| 🎛️ Custom Belief Generation     | 🔜 Coming Soon | User-generated beliefs offering end-to-end flexibility in shaping the belief system reasoning|
+
 ## 🏗️ Architecture
 <img width="663" alt="Screenshot 2024-08-21 at 9 04 07" src="https://github.com/user-attachments/assets/2bdfdaa8-e91c-45b0-b200-2e567daadc5d">
 

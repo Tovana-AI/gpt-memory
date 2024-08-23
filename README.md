@@ -38,8 +38,10 @@ message = "I just moved from New York to Paris for work."
 user_id = "user123"
 
 # Initialize with your preferred LLM provider and API key (Refer to the documentation for specific models)
-memory_manager = MemoryManager(api_key="your-llm-provider-api-key-here", provider="openai",
-                               business_description=business_description, include_beliefs=True)
+memory_manager = MemoryManager(api_key="provider-api-key",
+                               provider="openai",
+                               business_description=business_description,
+                               include_beliefs=True)
 
 # Update user memory
 memory_manager.update_user_memory(user_id=user_id, message=message)

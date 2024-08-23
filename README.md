@@ -2,7 +2,7 @@
 
 > Memory-Driven Reasoning for Smarter AI Agents
 
-GPT Memory is a library that introduces a new approach to improving LLM reasoning through actionable insights (beliefs) learned over time from memory. Supercharge your AI agents with personalized, context-aware responses.
+Tovana is a library that introduces a new approach to improving LLM reasoning through actionable insights (beliefs) learned over time from memory. Supercharge your AI agents with personalized, context-aware responses.
 
 [![PyPI version](https://badge.fury.io/py/gpt-memory.svg)](https://badge.fury.io/py/gptmem)
 [![License: Apache 2](https://img.shields.io/badge/License-Apache-yellow.svg)](https://opensource.org/license/apache-2-0)
@@ -39,9 +39,9 @@ The system is a comprehensive memory and belief management framework for AI agen
 
 ## 🚀 Quick Start
 
-1. Install GPT Memory:
+1. Install Tovana:
 ```bash
-pip install gptmem
+pip install tovana
 ```
 
 2. Use it in your project:
@@ -71,7 +71,7 @@ print(beliefs)  # Output: {"beliefs": "- Suggest spending time with Charlie and 
 
 ## 🧠 Belief Generation: The Secret Sauce
 
-GPT Memory introduces a new approach to LLM reasoning: actionable beliefs generated from user memory. These beliefs provide personalized insights that can significantly enhance your agent's planning, reasoning and responses.
+Tovana introduces a new approach to LLM reasoning: actionable beliefs generated from user memory. These beliefs provide personalized insights that can significantly enhance your agent's planning, reasoning and responses.
 
 ### Examples
 #### Input:
@@ -104,12 +104,12 @@ GPT Memory introduces a new approach to LLM reasoning: actionable beliefs genera
 
 ## 🤝 Contributing
 
-We welcome contributions! Found a bug or have a feature idea? Open an issue or submit a pull request. Let's make GPT Memory even better together! 💪
+We welcome contributions! Found a bug or have a feature idea? Open an issue or submit a pull request. Let's make Tovana even better together! 💪
 
 ## 📄 License
 
-GPT Memory is MIT licensed. See the [LICENSE](LICENSE) file for details.
+Tovana is Apache-2.0 licensed. See the [LICENSE](LICENSE) file for details.
 
 ---
 
-Ready to empower your AI agents with memory-driven reasoning? Get started with GPT Memory! 🚀 If you find it useful, don't forget to star the repo! ⭐
+Ready to empower your AI agents with memory-driven reasoning? Get started with Tovana! 🚀 If you find it useful, don't forget to star the repo! ⭐

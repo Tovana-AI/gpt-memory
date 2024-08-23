@@ -1,14 +1,14 @@
 <div align="center">
 <h1 style="display: flex; align-items: center; gap: 10px;">
   <img src="https://github.com/user-attachments/assets/3fb24490-b5f9-4af1-b2eb-8f2f24a6e6b8" alt="Logo" width="25">
-  Tovana
+  GPT Memory
 </h1>
 
 <h3>Memory Driven Reasoning for Smarter AI Agents</h3>
 
-Tovana is a library that introduces a new approach to improving LLM reasoning through actionable insights (beliefs) derived from continuous interactions and long term memory. Supercharge your AI agents with personalized, context-aware responses.
+GPT Memory is a library powered by Tovana that introduces a new approach to improving LLM reasoning through actionable insights (beliefs) derived from continuous interactions and long term memory. Supercharge your AI agents with personalized, context-aware responses.
 
-[![PyPI version](https://badge.fury.io/py/gpt-memory.svg)](https://badge.fury.io/py/gptmem)
+[![PyPI version](https://img.shields.io/pypi/v/tovana?logo=pypi&logoColor=white&style=flat)](https://badge.fury.io/py/tovana)
 [![License: Apache 2](https://img.shields.io/badge/License-Apache-yellow.svg)](https://opensource.org/license/apache-2-0)
 </div>
 

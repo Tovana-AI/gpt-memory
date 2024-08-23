@@ -1,4 +1,4 @@
-# 🧠 GPT Memory
+# 🧠 Tovana - Agent Memory Library
 
 > Memory-Driven Reasoning for Smarter AI Agents
 

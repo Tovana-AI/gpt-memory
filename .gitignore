@@ -2,6 +2,11 @@
 __pycache__/
 *.py[cod]
 *$py.class
+*.json
+.gitignore
+*.DS_Store
+.idea/
+
 
 # C extensions
 *.so

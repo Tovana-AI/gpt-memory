@@ -1,7 +1,7 @@
 <div align="center">
 <h1 style="display: flex; align-items: center; gap: 10px;">
   <img src="https://github.com/user-attachments/assets/3fb24490-b5f9-4af1-b2eb-8f2f24a6e6b8" alt="Logo" width="25">
-  Tovana - Agent Memory Library
+  Tovana
 </h1>
 
 <h3>Memory Driven Reasoning for Smarter AI Agents</h3>

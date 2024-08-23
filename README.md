@@ -6,19 +6,19 @@
 
 <h3>Memory Driven Reasoning for Smarter AI Agents</h3>
 
-GPT Memory is a library powered by Tovana that introduces a new approach to improving LLM reasoning through actionable insights (beliefs) derived from continuous interactions and long term memory. Supercharge your AI agents with personalized, context-aware responses.
+GPT Memory is a library powered by Tovana that introduces a new approach to improving LLM reasoning through actionable insights (beliefs) derived from continuous interactions and long term memory. Empower your AI agents with personalized, context-aware responses.
 
 [![PyPI version](https://img.shields.io/pypi/v/tovana?logo=pypi&logoColor=white&style=flat)](https://badge.fury.io/py/tovana)
 [![License: Apache 2](https://img.shields.io/badge/License-Apache-yellow.svg)](https://opensource.org/license/apache-2-0)
 </div>
 
-## Why Tovana?
+## Why GPT Memory?
 
 Current LLMs face significant limitations in their ability to learn and adapt from user-specific interactions over time. While LLMs excel at processing vast amounts of data, they struggle with ongoing personalization and context-aware learning. This gap restricts their ability to provide truly adaptive and evolving AI experiences.
 
-Tovana aims to address these challenges by providing a comprehensive memory and belief management framework for AI agents. Its core concept revolves around converting experiences (events) into memories, which in turn shape beliefs. These beliefs then influence the agent's reasoning, responses, and actions.
+Our Memory manager aims to address these challenges by providing a comprehensive memory and belief management framework for AI agents. Its core concept revolves around converting experiences (events) into memories, which in turn shape beliefs. These beliefs then influence the agent's reasoning, responses, and actions.
 
-By simulating human-like memory processes, Tovana enables more personalized, adaptive, and context-aware AI interactions. This framework bridges the gap between static knowledge bases and dynamic, experience-based learning, allowing AI agents to evolve their understanding and behavior over time. Tovana offers a powerful tool to create AI applications that can learn from and adapt to individual users, leading to more engaging and effective AI-driven experiences.
+By simulating human-like memory processes, GPT Memory enables more personalized, adaptive, and context-aware AI interactions. This framework bridges the gap between static knowledge bases and dynamic, experience-based learning, allowing AI agents to evolve their understanding and behavior over time.
 ## 🌟 Features
 
 | Feature                          | Status      | Description                                                                                 |
@@ -77,9 +77,9 @@ beliefs = memory_manager.get_beliefs(user_id=user_id)
 print(beliefs)  # Output: {"beliefs": "- Suggest spending time with Charlie and Luna when user is feeling down\n- Suggest family activities with Lisa and Mai for emotional well-being\n- Recommend playing basketball for physical exercise and stress relief"}
 ```
 
-## 🧠 Belief Generation: The Secret Sauce
+## 🧠 Belief Generation
 
-Tovana introduces a new approach to LLM reasoning: actionable beliefs generated from user memory. These beliefs provide personalized insights that can significantly enhance your agent's planning, reasoning and responses.
+GPT memory introduces a new approach to LLM reasoning: actionable beliefs generated from user memory. These beliefs provide personalized insights that can significantly enhance your agent's planning, reasoning and responses.
 
 ### Examples
 #### Input:
@@ -131,7 +131,7 @@ await memory_manager.batch_update_memory(user_id, messages)
 ```
 
 ### Sync vs Async Updates
-Tovana provides both synchronous and asynchronous update methods to cater to different use cases and application architectures:
+This library provides both synchronous and asynchronous update methods to cater to different use cases and application architectures:
 
 1. **Asynchronous Updates (`AsyncMemoryManager`)**: Ideal for applications built on asynchronous frameworks like FastAPI or asynchronous Python scripts. This allows for non-blocking memory updates, improving overall application performance, especially when dealing with I/O-bound operations or high-concurrency scenarios.
 2. **Synchronous Updates (`MemoryManager`)**: Suitable for traditional synchronous applications or when you need to ensure that memory updates are completed before proceeding with other operations. This can be useful in scripts or applications where the order of operations is critical.
@@ -148,4 +148,4 @@ Tovana is Apache-2.0 licensed. See the [LICENSE](LICENSE) file for details.
 
 ---
 
-Ready to empower your AI agents with memory-driven reasoning? Get started with Tovana! 🚀 If you find it useful, don't forget to star the repo! ⭐
+Ready to empower your AI agents with memory-driven reasoning? Get started with GPT Memory! 🚀 If you find it useful, don't forget to star the repo! ⭐

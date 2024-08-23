@@ -1,11 +1,16 @@
-# 🧠 Tovana - Agent Memory Library
+<div align="center">
+<h1 style="display: flex; align-items: center; gap: 10px;">
+  <img src="https://github.com/user-attachments/assets/3fb24490-b5f9-4af1-b2eb-8f2f24a6e6b8" alt="Logo" width="25">
+  Tovana
+</h1>
 
-> Memory Driven Reasoning for Smarter AI Agents
+<h3>Memory Driven Reasoning for Smarter AI Agents</h3>
 
 Tovana is a library that introduces a new approach to improving LLM reasoning through actionable insights (beliefs) derived from continous interactions and long term memory. Supercharge your AI agents with personalized, context-aware responses.
 
 [![PyPI version](https://badge.fury.io/py/gpt-memory.svg)](https://badge.fury.io/py/gptmem)
 [![License: Apache 2](https://img.shields.io/badge/License-Apache-yellow.svg)](https://opensource.org/license/apache-2-0)
+</div>
 
 ## Why Tovana?
 Current AI memory systems face significant drawbacks that limit their ability to mimic human-like intelligence. These include their static nature (vector dbs / semantic search), lack of contextual understanding, inability to learn from experience or form beliefs, poor handling of contradictions, limited associative capabilities, and absence of emotional intelligence. Additionally, AI agents struggle with abstraction, lack meta-cognitive abilities, and don't have mechanisms for selectively retaining or forgetting information. These shortcomings collectively restrict AI agents' adaptability, decision-making, and ability to navigate complex, real-world scenarios effectively.

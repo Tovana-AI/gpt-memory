@@ -7,7 +7,7 @@
 
 <h3>Memory Driven Reasoning for Smarter AI Agents</h3>
 
-GPT Memory is a library powered by Tovana that introduces a new approach to improving LLM reasoning through actionable insights (beliefs) derived from continuous interactions and long term memory.
+GPT Memory is a library powered by Tovana that introduces a new approach to improving LLM reasoning through actionable insights (aka beliefs) derived from continuous interactions and long term memory.
 
 [![PyPI version](https://img.shields.io/pypi/v/tovana?logo=pypi&logoColor=white&style=flat)](https://badge.fury.io/py/tovana)
 [![License: Apache 2](https://img.shields.io/badge/License-Apache-yellow.svg)](https://opensource.org/license/apache-2-0)

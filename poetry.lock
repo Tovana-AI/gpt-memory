@@ -1025,6 +1025,35 @@ files = [
 langchain-core = ">=0.2.10,<0.3.0"
 
 [[package]]
+name = "langgraph"
+version = "0.2.14"
+description = "Building stateful, multi-actor applications with LLMs"
+optional = false
+python-versions = "<4.0,>=3.9.0"
+files = [
+    {file = "langgraph-0.2.14-py3-none-any.whl", hash = "sha256:c2e37a273d207dc2e2428b68e094466066288b9b803c6a6b70be9e9c9bf20779"},
+    {file = "langgraph-0.2.14.tar.gz", hash = "sha256:a430151d7a67011923d8b0d175fa8a59eca4584e2e8d72dd85616ebdd39ddd77"},
+]
+
+[package.dependencies]
+langchain-core = ">=0.2.27,<0.3"
+langgraph-checkpoint = ">=1.0.2,<2.0.0"
+
+[[package]]
+name = "langgraph-checkpoint"
+version = "1.0.6"
+description = "Library with base interfaces for LangGraph checkpoint savers."
+optional = false
+python-versions = "<4.0.0,>=3.9.0"
+files = [
+    {file = "langgraph_checkpoint-1.0.6-py3-none-any.whl", hash = "sha256:b2435e1e42b11cfc8f3ce06d114c75cd04846e83a0214f75e9b4f512e3d5fa4e"},
+    {file = "langgraph_checkpoint-1.0.6.tar.gz", hash = "sha256:6ce541cbfb5d73cbceebac27e1214a3b07270a7f571de659d6e2215e3070c23e"},
+]
+
+[package.dependencies]
+langchain-core = ">=0.2.22,<0.3"
+
+[[package]]
 name = "langsmith"
 version = "0.1.104"
 description = "Client library to connect to the LangSmith LLM Tracing and Evaluation Platform."
@@ -2139,4 +2168,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "844675a10fbb8ff4da64c03bd10146a809e708951df090a115e93227df68c422"
+content-hash = "1455c38d3652a6790f56f87705d05fa33c620c335b1c12bd1303683d89697c51"

@@ -17,6 +17,7 @@ python = "^3.10"
 langchain = "^0.2.14"
 langchain-openai = "^0.1.22"
 aiofiles = "^24.1.0"
+langgraph = "^0.2.14"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.2"

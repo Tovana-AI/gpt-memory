@@ -2,10 +2,11 @@ import asyncio
 import json
 import os
 from datetime import datetime
-from typing import Dict, Optional, List
+from typing import Dict, List, Optional, Union
 
 import aiofiles
 from langchain_core.language_models import BaseChatModel
+from langchain_core.messages import BaseMessage
 from langchain_core.output_parsers import JsonOutputParser, StrOutputParser
 from langchain_core.prompts import (ChatPromptTemplate, FewShotPromptTemplate,
                                     PromptTemplate)
@@ -58,7 +59,9 @@ class BaseAsyncMemory:
         await self._update_user_memory(user_id, extracted_info)
         return self.memory[user_id]
 
-    async def batch_update_memory(self, user_id: str, messages: List[Dict[str, str]]) -> Dict:
+    async def batch_update_memory(
+        self, user_id: str, messages: Union[List[BaseMessage], List[Dict[str, str]]]
+    ) -> Dict:
         if user_id not in self.memory:
             self.memory[user_id] = {}
 
@@ -176,7 +179,9 @@ class BaseAsyncMemory:
 
         return extracted_info
 
-    async def _extract_batch_information(self, messages: List[Dict[str, str]]) -> Dict[str, str]:
+    async def _extract_batch_information(
+        self, messages: Union[List[BaseMessage], List[Dict[str, str]]]
+    ) -> Dict[str, str]:
         system_prompt = """
             You are an AI assistant that extracts relevant personal information from conversations between humans and AI agents.
             Extract relevant personal information from the following conversation only related to the human user. 
@@ -195,12 +200,19 @@ class BaseAsyncMemory:
             Remember that the memory could be very long so try to keep values concise and short with no explanations.
             """
 
-        prompt = ChatPromptTemplate.from_messages([
-            ("system", system_prompt),
-            ("human", "Conversation:\n{conversation}"),
-        ])
+        prompt = ChatPromptTemplate.from_messages(
+            [
+                ("system", system_prompt),
+                ("human", "Conversation:\n{conversation}"),
+            ]
+        )
 
-        conversation = "\n".join([f"{msg['role']}: {msg['content']}" for msg in messages])
+        if isinstance(messages[0], BaseMessage):
+            conversation = "\n".join([f"{msg.type}: {msg.content}" for msg in messages])
+        else:
+            conversation = "\n".join(
+                [f"{msg['role']}: {msg['content']}" for msg in messages]
+            )
         chain = prompt | self.llm | JsonOutputParser()
         extracted_info = await chain.ainvoke({"conversation": conversation})
 
@@ -312,7 +324,9 @@ class SyncMemory(BaseAsyncMemory):
     def update_memory(self, user_id: str, message: str) -> Dict:
         return asyncio.run((super().update_memory(user_id, message)))
 
-    def batch_update_memory(self, user_id: str, messages: List[Dict[str, str]]) -> Dict:
+    def batch_update_memory(
+        self, user_id: str, messages: Union[List[BaseMessage], List[Dict[str, str]]]
+    ) -> Dict:
         return asyncio.run(super().batch_update_memory(user_id, messages))
 
     def get_beliefs(self, user_id: str) -> Optional[str]:
@@ -351,9 +365,7 @@ class AsyncMemoryManager(BaseMemoryManager):
         )
 
     async def get_memory(self, user_id: str) -> str:
-        return (
-                await self.memory.get_memory(user_id) or "No memory found for this user."
-        )
+        return await self.memory.get_memory(user_id) or "No memory found for this user."
 
     async def update_memory(self, user_id: str, message: str):
         await self.memory.update_memory(user_id, message)
@@ -391,7 +403,9 @@ class MemoryManager(BaseMemoryManager):
     def update_memory(self, user_id: str, message: str):
         self.memory.update_memory(user_id, message)
 
-    def batch_update_memory(self, user_id: str, messages: List[Dict[str, str]]):
+    def batch_update_memory(
+        self, user_id: str, messages: Union[List[BaseMessage], List[Dict[str, str]]]
+    ):
         self.memory.batch_update_memory(user_id, messages)
 
     def delete_memory(self, user_id: str) -> bool:

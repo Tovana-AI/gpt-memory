@@ -18,13 +18,34 @@ start_time = time.time()
 # Conversation messages between human and agent
 conversation = [
     {"role": "human", "content": "Hi, I'm planning a trip to Japan next month."},
-    {"role": "assistant", "content": "That's exciting! Japan is a wonderful destination. What kind of activities are you interested in?"},
-    {"role": "human", "content": "I love trying local cuisine and visiting historical sites."},
-    {"role": "assistant", "content": "Great choices! Japan offers amazing food and rich history. Any specific cities you'd like to visit?"},
-    {"role": "human", "content": "I'm thinking of Tokyo and Kyoto. Maybe Osaka too if I have time."},
-    {"role": "assistant", "content": "Excellent choices. Tokyo is modern and bustling, Kyoto is full of traditional culture, and Osaka is known for its food scene."},
-    {"role": "human", "content": "That sounds perfect. I'll be traveling with my partner, and we're both vegetarians."},
-    {"role": "assistant", "content": "I'll keep that in mind. Japan has been improving its vegetarian options, especially in larger cities. I can help you find suitable restaurants."},
+    {
+        "role": "assistant",
+        "content": "That's exciting! Japan is a wonderful destination. What kind of activities are you interested in?",
+    },
+    {
+        "role": "human",
+        "content": "I love trying local cuisine and visiting historical sites.",
+    },
+    {
+        "role": "assistant",
+        "content": "Great choices! Japan offers amazing food and rich history. Any specific cities you'd like to visit?",
+    },
+    {
+        "role": "human",
+        "content": "I'm thinking of Tokyo and Kyoto. Maybe Osaka too if I have time.",
+    },
+    {
+        "role": "assistant",
+        "content": "Excellent choices. Tokyo is modern and bustling, Kyoto is full of traditional culture, and Osaka is known for its food scene.",
+    },
+    {
+        "role": "human",
+        "content": "That sounds perfect. I'll be traveling with my partner, and we're both vegetarians.",
+    },
+    {
+        "role": "assistant",
+        "content": "I'll keep that in mind. Japan has been improving its vegetarian options, especially in larger cities. I can help you find suitable restaurants.",
+    },
 ]
 
 # Batch update user memory with the conversation

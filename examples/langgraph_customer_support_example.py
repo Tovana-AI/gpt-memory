@@ -188,7 +188,7 @@ def update_memory(state):
     memory_context = memory_manager.get_memory_context(user_id=state["user_id"])
     memories[state["user_id"]] = {"fact": memory_context}
     print(f"# Tovana memory saved.. \n # {memory_context}")
-    return {"messages": [AIMessage(content="tovana memory save")], "info": memories}
+    return {"messages": [AIMessage(content="Tovana Memory Saved")], "info": memories}
 
 
 memory = MemorySaver()
